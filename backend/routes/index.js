@@ -1,9 +1,7 @@
-var express = require('express');
+import express from 'express';
+import hello from "./hello.route.js";
 var router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+router.use("/hello",hello);
 
 module.exports = router;
