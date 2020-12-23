@@ -17,6 +17,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 
+// errorHandler
+app.use(function (err, req, res, next) {
+  logger.error(err.message);
+  return res
+    .status(err.status || 500)
+    .json({ success: false, status: err.status, message: err.message });
+});
+
 // Connect Mongodb
 const db = mongoose.connection;
 db.on("error", console.error);
