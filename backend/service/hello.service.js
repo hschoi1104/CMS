@@ -1,6 +1,5 @@
-export class HelloService{
-    static read = async (req) => {
-
-    return "hello world!";
+export class HelloService {
+  static read = async (req) => {
+    return 'hello world!';
   };
 }
