@@ -9,4 +9,10 @@ export class UserDao {
     });
     return user.save();
   };
+
+  static getUser = async (req) => {
+    return User.findOne({
+      id: req.id,
+    });
+  };
 }
