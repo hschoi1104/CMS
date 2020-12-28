@@ -17,11 +17,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/v1', indexRouter);
 
 // errorHandler
+// eslint-disable-next-line no-unused-vars
 app.use(function (err, req, res, next) {
   logger.error(err.message);
-  return res
-    .status(err.status || 500)
-    .json({ success: false, status: err.status, message: err.message });
+  return res.status(err.statusCode || 500).json({
+    status: 'Error',
+    statusCode: err.statusCode,
+    message: err.message,
+  });
 });
 
 // Connect Mongodb

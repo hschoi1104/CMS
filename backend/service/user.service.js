@@ -1,5 +1,5 @@
 import { UserDao } from './../dao/user.dao';
-
+import { handleError } from './../model/Error';
 export class UserService {
   static create = async (req) => {
     const { id, password, name } = req;
@@ -7,10 +7,7 @@ export class UserService {
     const exsited = await UserDao.getUser(id);
 
     if (exsited != null) {
-      let err = new Error();
-      err.message = 'User already existed';
-      err.status = 400;
-      throw err;
+      throw new handleError(400, 'User already existed');
     }
 
     const result = await UserDao.create(id, password, name);
@@ -23,10 +20,7 @@ export class UserService {
     const result = await UserDao.getUser(id);
 
     if (result == null) {
-      let err = new Error();
-      err.message = 'User not exsited';
-      err.status = 404;
-      throw err;
+      throw new handleError(400, 'User not exsited');
     }
     return result;
   };
@@ -37,10 +31,7 @@ export class UserService {
     const result = await UserDao.updateUser(id, isManager);
 
     if (result == null) {
-      let err = new Error();
-      err.message = 'User not exsited';
-      err.status = 404;
-      throw err;
+      throw new handleError(400, 'User not exsited');
     }
     return result;
   };
@@ -51,17 +42,11 @@ export class UserService {
     const result = await UserDao.deleteUser(id);
 
     if (result.n == 0) {
-      let err = new Error();
-      err.message = 'User not exsited';
-      err.status = 404;
-      throw err;
+      throw new handleError(404, 'User not exsited');
     } else if (result.ok == 1) {
       return result;
     } else {
-      let err = new Error();
-      err.message = 'delete error';
-      err.status = 500;
-      throw err;
+      throw new handleError(500, 'Delete error');
     }
   };
 }
