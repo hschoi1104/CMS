@@ -1,15 +1,13 @@
 import { UserService } from '../service/user.service';
-
+import { Response } from '../model/Response';
 export class UserController {
   static create = async (req, res, next) => {
     try {
       const result = await UserService.create(req.body);
 
-      return res.status(201).json({
-        success: true,
-        message: 'create user success',
-        result: result,
-      });
+      return res
+        .status(201)
+        .json(new Response(201, 'success', 'create user success', result));
     } catch (err) {
       next(err);
     }
@@ -19,11 +17,9 @@ export class UserController {
     try {
       const result = await UserService.getUser(req.params);
 
-      return res.status(200).json({
-        success: true,
-        message: 'find user success',
-        result: result,
-      });
+      return res
+        .status(200)
+        .json(new Response(200, 'success', 'find user success', result));
     } catch (err) {
       next(err);
     }
@@ -33,11 +29,9 @@ export class UserController {
     try {
       const result = await UserService.updateUser(req.params, req.body);
 
-      return res.status(200).json({
-        success: true,
-        message: 'update user success',
-        result: result,
-      });
+      return res
+        .status(200)
+        .json(new Response(200, 'success', 'update user success', result));
     } catch (err) {
       next(err);
     }
@@ -46,11 +40,9 @@ export class UserController {
   static deleteUser = async (req, res, next) => {
     try {
       const result = await UserService.deleteUser(req.params);
-      return res.status(200).json({
-        success: true,
-        message: 'update user success',
-        result: result,
-      });
+      return res
+        .status(200)
+        .json(new Response(200, 'success', 'delete user success', result));
     } catch (err) {
       next(err);
     }
