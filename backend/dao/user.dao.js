@@ -1,28 +1,38 @@
 import User from '../model/User';
 
 export class UserDao {
-  static create = async (req) => {
+  static create = async (id, password, name) => {
     const user = new User({
-      id: req.id,
-      password: req.password,
-      name: req.name,
+      id,
+      password,
+      name,
     });
     return user.save();
   };
 
-  static getUser = async (req) => {
+  static getUser = async (id) => {
     return User.findOne({
-      id: req.id,
+      id,
     });
   };
 
-  static updateUser = async (id,isManager) => {
-    return User.findOneAndUpdate({
-      id
-    },{
-      isManager
-    },{
-      new: true
+  static updateUser = async (id, isManager) => {
+    return User.findOneAndUpdate(
+      {
+        id,
+      },
+      {
+        isManager,
+      },
+      {
+        new: true,
+      }
+    );
+  };
+
+  static deleteUser = async (id) => {
+    return User.deleteOne({
+      id,
     });
   };
 }

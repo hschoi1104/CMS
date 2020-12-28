@@ -29,10 +29,23 @@ export class UserController {
     }
   };
 
-   static updateUser = async (req, res, next) => {
+  static updateUser = async (req, res, next) => {
     try {
-      const result = await UserService.updateUser(req.params,req.body);
+      const result = await UserService.updateUser(req.params, req.body);
 
+      return res.status(200).json({
+        success: true,
+        message: 'update user success',
+        result: result,
+      });
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  static deleteUser = async (req, res, next) => {
+    try {
+      const result = await UserService.deleteUser(req.params);
       return res.status(200).json({
         success: true,
         message: 'update user success',
