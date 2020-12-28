@@ -28,4 +28,18 @@ export class UserController {
       next(err);
     }
   };
+
+   static updateUser = async (req, res, next) => {
+    try {
+      const result = await UserService.updateUser(req.params,req.body);
+
+      return res.status(200).json({
+        success: true,
+        message: 'update user success',
+        result: result,
+      });
+    } catch (err) {
+      next(err);
+    }
+  };
 }

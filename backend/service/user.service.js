@@ -16,4 +16,13 @@ export class UserService {
     }
     return result;
   };
+
+  static updateUser = async (params,body) =>{
+    try{
+      const result = await UserDao.updateUser(params.id,body.isManager);
+      return result;
+    }catch(err){
+      throw err;
+    }
+  }
 }

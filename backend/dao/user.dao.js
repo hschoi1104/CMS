@@ -15,4 +15,14 @@ export class UserDao {
       id: req.id,
     });
   };
+
+  static updateUser = async (id,isManager) => {
+    return User.findOneAndUpdate({
+      id
+    },{
+      isManager
+    },{
+      new: true
+    });
+  };
 }
