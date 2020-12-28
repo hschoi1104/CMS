@@ -1,9 +1,9 @@
 import { UserService } from '../service/user.service';
 import { Response } from '../model/Response';
 export class UserController {
-  static create = async (req, res, next) => {
+  static createUser = async (req, res, next) => {
     try {
-      const result = await UserService.create(req.body);
+      const result = await UserService.createUser(req.body);
 
       return res
         .status(201)

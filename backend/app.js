@@ -21,8 +21,8 @@ app.use('/api/v1', indexRouter);
 app.use(function (err, req, res, next) {
   logger.error(err.message);
   return res.status(err.statusCode || 500).json({
-    status: 'Error',
     statusCode: err.statusCode,
+    status: 'Error',
     message: err.message,
   });
 });

@@ -1,18 +1,22 @@
 import { UserDao } from './../dao/user.dao';
 import { handleError } from './../model/Error';
 export class UserService {
-  static create = async (req) => {
+  static createUser = async (req) => {
     const { id, password, name } = req;
 
     const exsited = await UserDao.getUser(id);
 
     if (exsited != null) {
-      throw new handleError(400, 'User already existed');
+      throw new handleError(409, 'User already existed');
     }
 
-    const result = await UserDao.create(id, password, name);
-
-    return result;
+    try {
+      await UserDao.createUser(id, password, name);
+      const result = await UserDao.getUser(id);
+      return result;
+    } catch (err) {
+      throw new handleError(500, 'Create user fail');
+    }
   };
 
   static getUser = async (req) => {
@@ -33,7 +37,8 @@ export class UserService {
     if (result == null) {
       throw new handleError(400, 'User not exsited');
     }
-    return result;
+    const findResult = await UserDao.getUser(id);
+    return findResult;
   };
 
   static deleteUser = async (params) => {

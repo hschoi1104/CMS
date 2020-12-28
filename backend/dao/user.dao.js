@@ -1,7 +1,7 @@
 import User from '../model/User';
 
 export class UserDao {
-  static create = async (id, password, name) => {
+  static createUser = async (id, password, name) => {
     const user = new User({
       id,
       password,
@@ -11,9 +11,12 @@ export class UserDao {
   };
 
   static getUser = async (id) => {
-    return User.findOne({
-      id,
-    });
+    return User.findOne(
+      {
+        id,
+      },
+      { password: 0, __v: 0, _id: 0 }
+    );
   };
 
   static updateUser = async (id, isManager) => {
