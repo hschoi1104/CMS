@@ -1,10 +1,11 @@
 import User from '../model/User';
 
 export class UserDao {
-  static createUser = async (id, password, name) => {
+  static createUser = async (id, password, salt, name) => {
     const user = new User({
       id,
       password,
+      salt,
       name,
     });
     return user.save();
@@ -15,7 +16,7 @@ export class UserDao {
       {
         id,
       },
-      { password: 0, __v: 0, _id: 0 }
+      { password: 0, __v: 0, _id: 0, salt: 0 }
     );
   };
 

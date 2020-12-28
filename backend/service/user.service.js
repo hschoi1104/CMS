@@ -1,8 +1,12 @@
 import { UserDao } from './../dao/user.dao';
 import { handleError } from './../model/Error';
+import { Secure } from './../util/secure';
 export class UserService {
   static createUser = async (req) => {
-    const { id, password, name } = req;
+    let { id, password, name } = req;
+
+    const salt = await Secure.genSalt();
+    password = await Secure.hash(password, salt);
 
     const exsited = await UserDao.getUser(id);
 
@@ -11,7 +15,7 @@ export class UserService {
     }
 
     try {
-      await UserDao.createUser(id, password, name);
+      await UserDao.createUser(id, password, salt, name);
       const result = await UserDao.getUser(id);
       return result;
     } catch (err) {

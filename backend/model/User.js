@@ -4,15 +4,19 @@ const Schema = mongoose.Schema;
 const User = new Schema({
   id: {
     type: String,
-    trin: true,
+    trim: true,
     unique: true,
     required: true,
     lowercase: true,
   },
   password: {
     type: String,
-    tring: true,
+    trim: true,
     required: true,
+  },
+  salt: {
+    type: String,
+    trim: true,
   },
   name: {
     type: String,
