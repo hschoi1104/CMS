@@ -1,5 +1,6 @@
 import express from 'express';
-import { logger } from './config/winston';
+import { logger, stream } from './config/winston';
+import morgan from 'morgan';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
@@ -13,15 +14,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(morgan('dev', { stream }));
 
-app.use('/', indexRouter);
+app.use('/api/v1', indexRouter);
 
 // errorHandler
+// eslint-disable-next-line no-unused-vars
 app.use(function (err, req, res, next) {
   logger.error(err.message);
-  return res
-    .status(err.status || 500)
-    .json({ success: false, status: err.status, message: err.message });
+  return res.status(err.statusCode || 500).json({
+    statusCode: err.statusCode,
+    status: 'Error',
+    message: err.message,
+  });
 });
 
 // Connect Mongodb
