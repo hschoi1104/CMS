@@ -25,6 +25,18 @@ export class UserController {
     }
   };
 
+  static getUsers = async (req, res, next) => {
+    try {
+      const result = await UserService.getUsers();
+
+      return res
+        .status(200)
+        .json(new Response(200, 'success', 'find users success', result));
+    } catch (err) {
+      next(err);
+    }
+  };
+
   static updateUser = async (req, res, next) => {
     try {
       const result = await UserService.updateUser(req.params, req.body);

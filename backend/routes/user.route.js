@@ -4,6 +4,7 @@ import { UserController } from '../controller/user.controller';
 
 router.post('/', UserController.createUser);
 router.get('/:id', UserController.getUser);
+router.get('/', UserController.getUsers);
 router.patch('/:id', UserController.updateUser);
 router.delete('/:id', UserController.deleteUser);
 

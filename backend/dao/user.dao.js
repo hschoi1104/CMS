@@ -20,6 +20,10 @@ export class UserDao {
     );
   };
 
+  static getUsers = async () => {
+    return User.find({}, { password: 0, __v: 0, _id: 0, salt: 0 });
+  };
+
   static updateUser = async (id, isManager) => {
     return User.findOneAndUpdate(
       {
