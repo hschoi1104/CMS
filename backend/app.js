@@ -1,5 +1,6 @@
 import express from 'express';
-import { logger } from './config/winston';
+import { logger, stream } from './config/winston';
+import morgan from 'morgan';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(morgan('dev', { stream }));
 
 app.use('/api/v1', indexRouter);
 
