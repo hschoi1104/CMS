@@ -143,4 +143,17 @@ export class UserService {
       refreshToken: newRefreshToken.token,
     };
   };
+
+  static revokeToken = async (body, cookies) => {
+    const token = body.refreshToken || cookies.refreshToken;
+
+    const result = await RefreshTokenDao.updateRefreshToken(
+      token,
+      Date.now(),
+      null
+    );
+    if (result == null) {
+      throw new handleError(404, 'token not found');
+    }
+  };
 }

@@ -10,5 +10,7 @@ router.patch('/:id', validate.updateUser, UserController.updateUser);
 router.delete('/:id', validate.deleteUser, UserController.deleteUser);
 
 router.post('/authenticate', UserController.authenticate);
-router.post('/refreshToken', UserController.refreshToken);
+router.post('/refresh-token', UserController.refreshToken);
+router.post('/revoke-token', UserController.revokeToken);
+
 module.exports = router;

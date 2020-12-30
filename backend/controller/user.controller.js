@@ -85,4 +85,15 @@ export class UserController {
       next(err);
     }
   };
+
+  static revokeToken = async (req, res, next) => {
+    try {
+      await UserService.revokeToken(req.body, req.cookies);
+      return res
+        .status(200)
+        .json(new Response(200, 'success', 'Revoke token sucess', 'revoked'));
+    } catch (err) {
+      next(err);
+    }
+  };
 }
