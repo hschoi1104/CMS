@@ -3,7 +3,7 @@ import { RefreshTokenDao } from './../dao/refreshToken.dao';
 import { handleError } from './../model/Error';
 import { TokenResponse } from './../model/TokenResponse';
 import bcrypt from 'bcrypt';
-import JWT from './../util/jwt';
+import { JWT } from './../util/jwt';
 export class UserService {
   //User
   static createUser = async (req) => {
@@ -92,17 +92,18 @@ export class UserService {
 
     const refreshToken = await RefreshTokenDao.createRefreshToken(user);
 
-    return new TokenResponse(user, accessToken, refreshToken);
+    return new TokenResponse(user, accessToken, refreshToken.token);
   };
 
-  static refreshToken = async (body) => {
-    const { token } = body;
+  static refreshToken = async (body, cookies) => {
+    const token = body.refreshToken || cookies.refreshToken;
     const refreshToken = await RefreshTokenDao.getRefreshToken(token);
-    if (refreshToken == null) {
+    if (refreshToken == null || refreshToken == 'Invalid token') {
       throw new handleError(401, 'Auth Error');
     }
-
+    console.log(token);
     const { user } = refreshToken;
+    console.log(user);
     const newRefreshToken = await RefreshTokenDao.createRefreshToken(user);
 
     await RefreshTokenDao.updateRefreshToken(

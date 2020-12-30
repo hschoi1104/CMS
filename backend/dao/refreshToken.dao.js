@@ -14,7 +14,9 @@ export class RefreshTokenDao {
   };
 
   static getRefreshToken = async (token) => {
-    return await RefreshToken.find({ token });
+    const refreshToken = await RefreshToken.findOne({ token }).populate('user');
+    if (!refreshToken || !refreshToken.isActive) return 'Invalid token';
+    return refreshToken;
   };
 
   static updateRefreshToken = async (token, revoked, replacedToken) => {

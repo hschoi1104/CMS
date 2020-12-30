@@ -5,7 +5,7 @@ dotenv.config();
 
 export class JWT {
   static generateAccessToken = async (user) => {
-    return jwt.sign(
+    return await jwt.sign(
       { id: user.id, auth: user.isManager, name: user.name },
       process.env.JWT_SECRET,
       {

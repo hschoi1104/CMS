@@ -75,7 +75,7 @@ export class UserController {
 
   static refreshToken = async (req, res, next) => {
     try {
-      const result = await UserService.refreshToken(req.body);
+      const result = await UserService.refreshToken(req.body, req.cookies);
       return res
         .status(200)
         .json(

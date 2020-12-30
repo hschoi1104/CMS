@@ -9,8 +9,12 @@ router.get('/', UserController.getUsers);
 router.patch('/:id', validate.updateUser, UserController.updateUser);
 router.delete('/:id', validate.deleteUser, UserController.deleteUser);
 
-router.post('/authenticate', UserController.authenticate);
-router.post('/refresh-token', UserController.refreshToken);
-router.post('/revoke-token', UserController.revokeToken);
+router.post(
+  '/authenticate',
+  validate.authenticate,
+  UserController.authenticate
+);
+router.post('/refresh-token', validate.token, UserController.refreshToken);
+router.post('/revoke-token', validate.token, UserController.revokeToken);
 
 module.exports = router;
