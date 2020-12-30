@@ -1,13 +1,11 @@
 import { UserDao } from './../dao/user.dao';
 import { RefreshTokenDao } from './../dao/refreshToken.dao';
 import { handleError } from './../model/Error';
+import { TokenResponse } from './../model/TokenResponse';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import crypto from 'crypto';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import JWT from './../util/jwt';
 export class UserService {
+  //User
   static createUser = async (req) => {
     let { id, password, name } = req;
 
@@ -74,52 +72,38 @@ export class UserService {
     }
   };
 
+  //Auth
   static authenticate = async (body) => {
     const { id, password } = body;
 
     const user = await UserDao.getUserforAuth(id);
 
+    if (user == null) {
+      throw new handleError(404, 'User not exsited');
+    }
+
     const compareResult = await bcrypt.compareSync(password, user.password);
 
-    if (compareResult === false) throw new handleError(401, 'Auth Error');
+    if (compareResult === false) {
+      throw new handleError(401, 'Auth Error');
+    }
 
-    const accessToken = jwt.sign(
-      { id: user.id, auth: user.isManager, name: user.name },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: '1h',
-      }
-    );
+    const accessToken = await JWT.generateAccessToken(user);
 
-    const token = crypto.randomBytes(40).toString('hex');
-    const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-    const refreshToken = await RefreshTokenDao.createRefreshToken(
-      user,
-      token,
-      expires
-    );
+    const refreshToken = await RefreshTokenDao.createRefreshToken(user);
 
-    return {
-      id: user.id,
-      name: user.name,
-      auth: user.isManager,
-      accessToken,
-      refreshToken: refreshToken.token,
-    };
+    return new TokenResponse(user, accessToken, refreshToken);
   };
 
   static refreshToken = async (body) => {
     const { token } = body;
     const refreshToken = await RefreshTokenDao.getRefreshToken(token);
-    const { user } = refreshToken;
+    if (refreshToken == null) {
+      throw new handleError(401, 'Auth Error');
+    }
 
-    const newToken = crypto.randomBytes(40).toString('hex');
-    const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-    const newRefreshToken = await RefreshTokenDao.createRefreshToken(
-      user,
-      newToken,
-      expires
-    );
+    const { user } = refreshToken;
+    const newRefreshToken = await RefreshTokenDao.createRefreshToken(user);
 
     await RefreshTokenDao.updateRefreshToken(
       refreshToken.token,
@@ -127,21 +111,9 @@ export class UserService {
       newRefreshToken.token
     );
 
-    const accessToken = jwt.sign(
-      { id: user.id, auth: user.isManager, name: user.name },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: '1h',
-      }
-    );
+    const accessToken = await JWT.generateAccessToken(user);
 
-    return {
-      id: user.id,
-      name: user.name,
-      auth: user.isManager,
-      accessToken,
-      refreshToken: newRefreshToken.token,
-    };
+    return new TokenResponse(user, accessToken, newRefreshToken.token);
   };
 
   static revokeToken = async (body, cookies) => {
@@ -153,7 +125,7 @@ export class UserService {
       null
     );
     if (result == null) {
-      throw new handleError(404, 'token not found');
+      throw new handleError(401, 'Auth Error');
     }
   };
 }
