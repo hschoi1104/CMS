@@ -61,4 +61,15 @@ export class UserController {
       next(err);
     }
   };
+
+  static authenticate = async (req, res, next) => {
+    try {
+      const result = await UserService.authenticate(req.body);
+      return res
+        .status(200)
+        .json(new Response(200, 'success', 'Authenticate success', result));
+    } catch (err) {
+      next(err);
+    }
+  };
 }

@@ -43,4 +43,10 @@ export class UserDao {
       id,
     });
   };
+
+  static getUserforAuth = async (id) => {
+    return User.findOne({
+      id,
+    });
+  };
 }

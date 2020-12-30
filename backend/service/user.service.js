@@ -1,12 +1,18 @@
 import { UserDao } from './../dao/user.dao';
+import { RefreshTokenDao } from './../dao/refreshToken.dao';
 import { handleError } from './../model/Error';
-import { Secure } from './../util/secure';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
+import dotenv from 'dotenv';
+
+dotenv.config();
 export class UserService {
   static createUser = async (req) => {
     let { id, password, name } = req;
 
-    const salt = await Secure.genSalt();
-    password = await Secure.hash(password, salt);
+    const salt = await bcrypt.genSalt(12);
+    password = await bcrypt.hash(password, salt);
 
     const exsited = await UserDao.getUser(id);
 
@@ -28,7 +34,7 @@ export class UserService {
     const result = await UserDao.getUser(id);
 
     if (result == null) {
-      throw new handleError(4004, 'User not exsited');
+      throw new handleError(404, 'User not exsited');
     }
     return result;
   };
@@ -37,7 +43,7 @@ export class UserService {
     const result = await UserDao.getUsers();
 
     if (result == null) {
-      throw new handleError(4004, 'User not exsited');
+      throw new handleError(404, 'User not exsited');
     }
     return result;
   };
@@ -48,7 +54,7 @@ export class UserService {
     const result = await UserDao.updateUser(id, isManager);
 
     if (result == null) {
-      throw new handleError(4004, 'User not exsited');
+      throw new handleError(404, 'User not exsited');
     }
     const findResult = await UserDao.getUser(id);
     return findResult;
@@ -66,5 +72,41 @@ export class UserService {
     } else {
       throw new handleError(500, 'Delete error');
     }
+  };
+
+  static authenticate = async (body) => {
+    const { id, password } = body;
+
+    const user = await UserDao.getUserforAuth(id);
+
+    const compareResult = await bcrypt.compareSync(password, user.password);
+
+    if (compareResult === false) throw new handleError(401, 'Auth Error');
+
+    //JWT 생성
+    const accessToken = jwt.sign(
+      { id: user.id, auth: user.isManager, name: user.name },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: '1h',
+      }
+    );
+    //refresh 생성 및 저장
+    const token = crypto.randomBytes(40).toString('hex');
+    const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    const refreshToken = await RefreshTokenDao.createRefreshToken(
+      user,
+      token,
+      expires
+    );
+    //결과 반환
+
+    return {
+      id: user.id,
+      name: user.name,
+      auth: user.isManager,
+      accessToken,
+      refreshToken: refreshToken.token,
+    };
   };
 }
