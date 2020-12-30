@@ -72,4 +72,17 @@ export class UserController {
       next(err);
     }
   };
+
+  static refreshToken = async (req, res, next) => {
+    try {
+      const result = await UserService.refreshToken(req.body);
+      return res
+        .status(200)
+        .json(
+          new Response(200, 'success', 'Refresh Authenticate success', result)
+        );
+    } catch (err) {
+      next(err);
+    }
+  };
 }

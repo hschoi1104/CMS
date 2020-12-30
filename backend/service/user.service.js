@@ -83,7 +83,6 @@ export class UserService {
 
     if (compareResult === false) throw new handleError(401, 'Auth Error');
 
-    //JWT 생성
     const accessToken = jwt.sign(
       { id: user.id, auth: user.isManager, name: user.name },
       process.env.JWT_SECRET,
@@ -91,7 +90,7 @@ export class UserService {
         expiresIn: '1h',
       }
     );
-    //refresh 생성 및 저장
+
     const token = crypto.randomBytes(40).toString('hex');
     const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     const refreshToken = await RefreshTokenDao.createRefreshToken(
@@ -99,7 +98,6 @@ export class UserService {
       token,
       expires
     );
-    //결과 반환
 
     return {
       id: user.id,
@@ -107,6 +105,42 @@ export class UserService {
       auth: user.isManager,
       accessToken,
       refreshToken: refreshToken.token,
+    };
+  };
+
+  static refreshToken = async (body) => {
+    const { token } = body;
+    const refreshToken = await RefreshTokenDao.getRefreshToken(token);
+    const { user } = refreshToken;
+
+    const newToken = crypto.randomBytes(40).toString('hex');
+    const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    const newRefreshToken = await RefreshTokenDao.createRefreshToken(
+      user,
+      newToken,
+      expires
+    );
+
+    await RefreshTokenDao.updateRefreshToken(
+      refreshToken.token,
+      Date.now(),
+      newRefreshToken.token
+    );
+
+    const accessToken = jwt.sign(
+      { id: user.id, auth: user.isManager, name: user.name },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: '1h',
+      }
+    );
+
+    return {
+      id: user.id,
+      name: user.name,
+      auth: user.isManager,
+      accessToken,
+      refreshToken: newRefreshToken.token,
     };
   };
 }

@@ -7,6 +7,23 @@ export class RefreshTokenDao {
       token,
       expires,
     });
-    return refreshToken.save();
+    return await refreshToken.save();
+  };
+
+  static getRefreshToken = async (token) => {
+    return await RefreshToken.find({ token });
+  };
+
+  static updateRefreshToken = async (token, revoked, replacedToken) => {
+    return await RefreshToken.findOneAndUpdate(
+      {
+        token,
+      },
+      {
+        revoked,
+        replacedToken,
+      },
+      { new: true }
+    );
   };
 }
