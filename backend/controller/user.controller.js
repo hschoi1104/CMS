@@ -1,6 +1,7 @@
 import { UserService } from '../service/user.service';
 import { Response } from '../model/Response';
 import { logger } from '../config/winston';
+import { TokenCookie } from '../util/tokenCookie';
 export class UserController {
   static createUser = async (req, res, next) => {
     try {
@@ -64,7 +65,8 @@ export class UserController {
 
   static authenticate = async (req, res, next) => {
     try {
-      const result = await UserService.authenticate(req.body);
+      const { result, refreshToken } = await UserService.authenticate(req.body);
+      TokenCookie.setTokenCookie(res, refreshToken);
       return res
         .status(200)
         .json(new Response(200, 'success', 'Authenticate success', result));
@@ -75,7 +77,11 @@ export class UserController {
 
   static refreshToken = async (req, res, next) => {
     try {
-      const result = await UserService.refreshToken(req.body, req.cookies);
+      const { result, refreshToken } = await UserService.refreshToken(
+        req.body,
+        req.cookies
+      );
+      TokenCookie.setTokenCookie(res, refreshToken);
       return res
         .status(200)
         .json(

@@ -91,8 +91,8 @@ export class UserService {
     const accessToken = await JWT.generateAccessToken(user);
 
     const refreshToken = await RefreshTokenDao.createRefreshToken(user);
-
-    return new TokenResponse(user, accessToken, refreshToken.token);
+    const result = new TokenResponse(user, accessToken);
+    return { result: result, refreshToken: refreshToken.token };
   };
 
   static refreshToken = async (body, cookies) => {
@@ -114,7 +114,8 @@ export class UserService {
 
     const accessToken = await JWT.generateAccessToken(user);
 
-    return new TokenResponse(user, accessToken, newRefreshToken.token);
+    const result = new TokenResponse(user, accessToken);
+    return { result: result, refreshToken: newRefreshToken.token };
   };
 
   static revokeToken = async (body, cookies) => {
