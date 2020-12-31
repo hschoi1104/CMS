@@ -5,17 +5,17 @@ import { UserController } from '../controller/user.controller';
 import authMiddleware from './../middleware/auth.middleware';
 
 router.post('/', validate.createUser, UserController.createUser);
-router.get('/:id', authMiddleware, validate.getUser, UserController.getUser);
-router.get('/', authMiddleware, UserController.getUsers);
+router.get('/:id', authMiddleware(), validate.getUser, UserController.getUser);
+router.get('/', authMiddleware('manager'), UserController.getUsers);
 router.patch(
   '/:id',
-  authMiddleware,
+  authMiddleware(),
   validate.updateUser,
   UserController.updateUser
 );
 router.delete(
   '/:id',
-  authMiddleware,
+  authMiddleware('manager'),
   validate.deleteUser,
   UserController.deleteUser
 );
@@ -27,13 +27,13 @@ router.post(
 );
 router.post(
   '/refresh-token',
-  authMiddleware,
+  authMiddleware(),
   validate.token,
   UserController.refreshToken
 );
 router.post(
   '/revoke-token',
-  authMiddleware,
+  authMiddleware(),
   validate.token,
   UserController.revokeToken
 );
