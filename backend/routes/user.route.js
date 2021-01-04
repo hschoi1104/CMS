@@ -9,7 +9,7 @@ router.get('/:id', authMiddleware(), validate.getUser, UserController.getUser);
 router.get('/', authMiddleware('manager'), UserController.getUsers);
 router.patch(
   '/:id',
-  authMiddleware(),
+  authMiddleware('manager'),
   validate.updateUser,
   UserController.updateUser
 );

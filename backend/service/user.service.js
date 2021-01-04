@@ -19,7 +19,11 @@ export class UserService {
     }
 
     try {
-      await UserDao.createUser(id, password, salt, name);
+      const users = await UserDao.getUsers();
+      const count = Object.keys(users).length;
+      const isManager = count == 0 ? true : false;
+
+      await UserDao.createUser(id, password, salt, name, isManager);
       const result = await UserDao.getUser(id);
       return result;
     } catch (err) {
@@ -101,9 +105,9 @@ export class UserService {
     if (refreshToken == null || refreshToken == 'Invalid token') {
       throw new handleError(401, 'Auth Error');
     }
-    console.log(token);
+
     const { user } = refreshToken;
-    console.log(user);
+
     const newRefreshToken = await RefreshTokenDao.createRefreshToken(user);
 
     await RefreshTokenDao.updateRefreshToken(
