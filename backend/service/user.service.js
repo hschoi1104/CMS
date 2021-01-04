@@ -1,12 +1,16 @@
 import { UserDao } from './../dao/user.dao';
+import { RefreshTokenDao } from './../dao/refreshToken.dao';
 import { handleError } from './../model/Error';
-import { Secure } from './../util/secure';
+import { TokenResponse } from './../model/TokenResponse';
+import bcrypt from 'bcrypt';
+import { JWT } from './../util/jwt';
 export class UserService {
+  //User
   static createUser = async (req) => {
     let { id, password, name } = req;
 
-    const salt = await Secure.genSalt();
-    password = await Secure.hash(password, salt);
+    const salt = await bcrypt.genSalt(12);
+    password = await bcrypt.hash(password, salt);
 
     const exsited = await UserDao.getUser(id);
 
@@ -15,7 +19,11 @@ export class UserService {
     }
 
     try {
-      await UserDao.createUser(id, password, salt, name);
+      const users = await UserDao.getUsers();
+      const count = Object.keys(users).length;
+      const isManager = count == 0 ? true : false;
+
+      await UserDao.createUser(id, password, salt, name, isManager);
       const result = await UserDao.getUser(id);
       return result;
     } catch (err) {
@@ -28,7 +36,7 @@ export class UserService {
     const result = await UserDao.getUser(id);
 
     if (result == null) {
-      throw new handleError(4004, 'User not exsited');
+      throw new handleError(404, 'User not exsited');
     }
     return result;
   };
@@ -37,7 +45,7 @@ export class UserService {
     const result = await UserDao.getUsers();
 
     if (result == null) {
-      throw new handleError(4004, 'User not exsited');
+      throw new handleError(404, 'User not exsited');
     }
     return result;
   };
@@ -48,7 +56,7 @@ export class UserService {
     const result = await UserDao.updateUser(id, isManager);
 
     if (result == null) {
-      throw new handleError(4004, 'User not exsited');
+      throw new handleError(404, 'User not exsited');
     }
     const findResult = await UserDao.getUser(id);
     return findResult;
@@ -65,6 +73,65 @@ export class UserService {
       return result;
     } else {
       throw new handleError(500, 'Delete error');
+    }
+  };
+
+  //Auth
+  static authenticate = async (body) => {
+    const { id, password } = body;
+
+    const user = await UserDao.getUserforAuth(id);
+
+    if (user == null) {
+      throw new handleError(404, 'User not exsited');
+    }
+
+    const compareResult = await bcrypt.compareSync(password, user.password);
+
+    if (compareResult === false) {
+      throw new handleError(401, 'Auth Error');
+    }
+
+    const accessToken = await JWT.generateAccessToken(user);
+
+    const refreshToken = await RefreshTokenDao.createRefreshToken(user);
+    const result = new TokenResponse(user, accessToken);
+    return { result: result, refreshToken: refreshToken.token };
+  };
+
+  static refreshToken = async (body, cookies) => {
+    const token = body.refreshToken || cookies.refreshToken;
+    const refreshToken = await RefreshTokenDao.getRefreshToken(token);
+    if (refreshToken == null || refreshToken == 'Invalid token') {
+      throw new handleError(401, 'Auth Error');
+    }
+
+    const { user } = refreshToken;
+
+    const newRefreshToken = await RefreshTokenDao.createRefreshToken(user);
+
+    await RefreshTokenDao.updateRefreshToken(
+      refreshToken.token,
+      Date.now(),
+      newRefreshToken.token
+    );
+
+    const accessToken = await JWT.generateAccessToken(user);
+
+    const result = new TokenResponse(user, accessToken);
+    return { result: result, refreshToken: newRefreshToken.token };
+  };
+
+  static revokeToken = async (body, cookies) => {
+    const token = body.refreshToken || cookies.refreshToken;
+
+    const result = await RefreshTokenDao.updateRefreshToken(
+      token,
+      Date.now(),
+      null
+    );
+    if (result == null) {
+      throw new handleError(401, 'Auth Error');
     }
   };
 }

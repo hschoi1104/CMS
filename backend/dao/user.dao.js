@@ -1,12 +1,13 @@
 import User from '../model/User';
 
 export class UserDao {
-  static createUser = async (id, password, salt, name) => {
+  static createUser = async (id, password, salt, name, isManager) => {
     const user = new User({
       id,
       password,
       salt,
       name,
+      isManager,
     });
     return user.save();
   };
@@ -40,6 +41,12 @@ export class UserDao {
 
   static deleteUser = async (id) => {
     return User.deleteOne({
+      id,
+    });
+  };
+
+  static getUserforAuth = async (id) => {
+    return User.findOne({
       id,
     });
   };

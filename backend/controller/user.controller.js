@@ -1,6 +1,7 @@
 import { UserService } from '../service/user.service';
 import { Response } from '../model/Response';
 import { logger } from '../config/winston';
+import { TokenCookie } from '../util/tokenCookie';
 export class UserController {
   static createUser = async (req, res, next) => {
     try {
@@ -57,6 +58,46 @@ export class UserController {
       return res
         .status(200)
         .json(new Response(200, 'success', 'delete user success', result));
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  static authenticate = async (req, res, next) => {
+    try {
+      const { result, refreshToken } = await UserService.authenticate(req.body);
+      TokenCookie.setTokenCookie(res, refreshToken);
+      return res
+        .status(200)
+        .json(new Response(200, 'success', 'Authenticate success', result));
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  static refreshToken = async (req, res, next) => {
+    try {
+      const { result, refreshToken } = await UserService.refreshToken(
+        req.body,
+        req.cookies
+      );
+      TokenCookie.setTokenCookie(res, refreshToken);
+      return res
+        .status(200)
+        .json(
+          new Response(200, 'success', 'Refresh Authenticate success', result)
+        );
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  static revokeToken = async (req, res, next) => {
+    try {
+      await UserService.revokeToken(req.body, req.cookies);
+      return res
+        .status(200)
+        .json(new Response(200, 'success', 'Revoke token sucess', 'revoked'));
     } catch (err) {
       next(err);
     }

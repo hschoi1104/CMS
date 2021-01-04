@@ -9,7 +9,7 @@ exports.createUser = [
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      logger.info(JSON.stringify(errors));
+      logger.error(JSON.stringify(errors));
       next(new handleError(400, 'type validate fail'));
     } else next();
   },
@@ -21,7 +21,7 @@ exports.getUser = [
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      logger.info(JSON.stringify(errors));
+      logger.error(JSON.stringify(errors));
       next(new handleError(400, 'type validate fail'));
     } else next();
   },
@@ -34,7 +34,7 @@ exports.updateUser = [
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      logger.info(JSON.stringify(errors));
+      logger.error(JSON.stringify(errors));
       next(new handleError(400, 'type validate fail'));
     } else next();
   },
@@ -46,7 +46,30 @@ exports.deleteUser = [
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      logger.info(JSON.stringify(errors));
+      logger.error(JSON.stringify(errors));
+      next(new handleError(400, 'type validate fail'));
+    } else next();
+  },
+];
+
+exports.authenticate = [
+  check('id').isString().isLength({ min: 5 }),
+  check('password').isString().isLength({ min: 8 }),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      logger.error(JSON.stringify(errors));
+      next(new handleError(400, 'type validate fail'));
+    } else next();
+  },
+];
+
+exports.token = [
+  (req, res, next) => {
+    const token = req.body.refreshToken || req.cookies.refreshToken;
+    if (token == null) {
+      logger.error(JSON.stringify('Token not found'));
       next(new handleError(400, 'type validate fail'));
     } else next();
   },
