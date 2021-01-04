@@ -13,20 +13,18 @@ function authMiddleware(role = []) {
     async (req, res, next) => {
       try {
         token = req.headers.authorization.split('Bearer ')[1];
+        try {
+          decode = await jwt.verify(token, process.env.JWT_SECRET);
+          const user = await UserDao.getUser(decode.id);
+          if (!user || (role == 'manager' && !user.isManager)) {
+            next(new handleError(403, 'Unauthorized'));
+          }
+        } catch (err) {
+          next(new handleError(401, 'Expired Token'));
+        }
       } catch (err) {
         next(new handleError(401, 'Token is missing'));
       }
-      try {
-        decode = await jwt.verify(token, process.env.JWT_SECRET);
-      } catch (err) {
-        next(new handleError(401, 'Expired Token'));
-      }
-
-      const user = await UserDao.getUser(decode.id);
-      if (!user || (role == 'manager' && !user.isManager)) {
-        next(new handleError(403, 'Unauthorized'));
-      }
-
       next();
     },
   ];
