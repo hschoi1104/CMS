@@ -1,11 +1,8 @@
 <template>
 	<v-container class="fill-height text-center">
-		<v-text>Home PAGE</v-text>
+		<v-text>Object Upload PAGE</v-text>
 	</v-container>
 </template>
-
 <script>
-export default {
-	name: 'Home',
-};
+export default { name: 'objectUpload' };
 </script>
