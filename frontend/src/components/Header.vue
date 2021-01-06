@@ -6,21 +6,35 @@
 			<v-spacer></v-spacer>
 
 			<v-row>
-				<router-link to="/object/upload" class="link_white"
-					>오브젝트 업로드</router-link
+				<v-card flat color="#2F5FD2" @click="$router.push('/object/upload')">
+					<v-card-text class="white--text">오브젝트 업로드</v-card-text></v-card
 				>
 			</v-row>
 			<v-row>
-				<router-link to="/object/manage" class="link_white"
-					>오브젝트 관리</router-link
+				<v-card flat color="#2F5FD2" @click="$router.push('/object/manage')">
+					<v-card-text class="white--text">오브젝트 관리</v-card-text></v-card
 				>
 			</v-row>
 			<v-row>
-				<router-link to="/signUp" class="link_white">회원가입</router-link>
+				<v-card flat color="#2F5FD2" @click="$router.push('/signup')">
+					<v-card-text class="white--text">회원가입</v-card-text></v-card
+				>
 			</v-row>
 			<v-row>
-				<router-link to="/login" class="link_white">로그인</router-link>
+				<v-card flat color="#2F5FD2" @click="$router.push('/login')">
+					<v-card-text class="white--text">로그인</v-card-text></v-card
+				>
 			</v-row>
 		</v-app-bar>
 	</div>
 </template>
+<script>
+export default {
+	name: 'Home',
+	methods: {
+		routerPush() {
+			this.$router.push('/signup');
+		},
+	},
+};
+</script>
