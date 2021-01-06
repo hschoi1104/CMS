@@ -7,13 +7,12 @@
 </template>
 
 <script>
-import Footer from './components/Footer.vue';
-
 export default {
 	name: 'App',
 
 	components: {
-		Footer,
+		Header: () => import('./components/Header'),
+		Footer: () => import('./components/Footer'),
 	},
 
 	data: () => ({
