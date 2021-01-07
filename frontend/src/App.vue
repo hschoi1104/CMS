@@ -1,9 +1,10 @@
 <template>
 	<v-app>
 		<Header />
-		<v-container class="fill-screen">
+
+		<div class="d-flex justify-center align-center" style="height: 100%">
 			<router-view />
-		</v-container>
+		</div>
 		<Footer />
 	</v-app>
 </template>
