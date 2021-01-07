@@ -1,7 +1,9 @@
 <template>
 	<v-app>
 		<Header />
-		<router-view />
+		<v-container class="fill-screen">
+			<router-view />
+		</v-container>
 		<Footer />
 	</v-app>
 </template>
