@@ -70,12 +70,10 @@ export default {
 				return;
 			}
 			try {
-				const result = await this.$axios.post('/user/authenticate', {
-					id: this.user.id,
-					password: this.user.password,
-				});
-				if (result.status == 200) this.$router.push('/');
-				return;
+				const { id, password } = this.user;
+				await this.$store.dispatch('Login', { id, password });
+
+				return this.$router.push('/');
 			} catch (error) {
 				this.errorMsg = '로그인 실패';
 			}
