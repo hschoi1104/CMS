@@ -7,25 +7,28 @@
 				<v-spacer></v-spacer>
 
 				<v-row class="justify-end">
-					<v-card flat color="#2F5FD2" @click="$router.push('/')">
+					<v-card flat color="#2F5FD2" @click="Push('/')">
 						<v-card-text class="white--text">홈</v-card-text>
 					</v-card>
-					<v-card flat color="#2F5FD2" @click="$router.push('/object/upload')">
-						<v-card-text class="white--text">오브젝트 업로드</v-card-text>
-					</v-card>
 
-					<v-card flat color="#2F5FD2" @click="$router.push('/object/manage')">
-						<v-card-text class="white--text">오브젝트 관리</v-card-text>
-					</v-card>
-
-					<v-card flat color="#2F5FD2" @click="$router.push('/signup')">
+					<v-card
+						v-if="!loginCheck"
+						flat
+						color="#2F5FD2"
+						@click="Push('/signup')"
+					>
 						<v-card-text class="white--text">회원가입</v-card-text>
 					</v-card>
 
-					<v-card flat color="#2F5FD2" @click="$router.push('/login')">
+					<v-card
+						v-if="!loginCheck"
+						flat
+						color="#2F5FD2"
+						@click="Push('/login')"
+					>
 						<v-card-text class="white--text">로그인</v-card-text>
 					</v-card>
-					<v-card flat color="#2F5FD2" @click="Logout">
+					<v-card v-if="loginCheck" flat color="#2F5FD2" @click="Logout">
 						<v-card-text class="white--text">로그아웃</v-card-text>
 					</v-card>
 				</v-row>
@@ -39,6 +42,14 @@ export default {
 	methods: {
 		Logout() {
 			this.$store.dispatch('Logout');
+		},
+		Push(to) {
+			this.$router.push(to).catch(() => {});
+		},
+	},
+	computed: {
+		loginCheck() {
+			return this.$store.state.accessToken;
 		},
 	},
 };
