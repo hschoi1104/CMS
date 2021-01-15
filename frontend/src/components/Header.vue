@@ -2,7 +2,7 @@
 	<div>
 		<v-container>
 			<v-app-bar absolute color="#2F5FD2" class="white--text">
-				<v-toolbar-title> <strong>동화 히어로 CMS</strong></v-toolbar-title>
+				<v-toolbar-title> <strong>OAuth 2.0</strong></v-toolbar-title>
 
 				<v-spacer></v-spacer>
 
