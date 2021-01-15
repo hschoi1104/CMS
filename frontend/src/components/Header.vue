@@ -7,6 +7,9 @@
 				<v-spacer></v-spacer>
 
 				<v-row class="justify-end">
+					<v-card flat color="#2F5FD2" @click="$router.push('/')">
+						<v-card-text class="white--text">홈</v-card-text>
+					</v-card>
 					<v-card flat color="#2F5FD2" @click="$router.push('/object/upload')">
 						<v-card-text class="white--text">오브젝트 업로드</v-card-text>
 					</v-card>
@@ -22,6 +25,9 @@
 					<v-card flat color="#2F5FD2" @click="$router.push('/login')">
 						<v-card-text class="white--text">로그인</v-card-text>
 					</v-card>
+					<v-card flat color="#2F5FD2" @click="Logout">
+						<v-card-text class="white--text">로그아웃</v-card-text>
+					</v-card>
 				</v-row>
 			</v-app-bar>
 		</v-container>
@@ -30,5 +36,10 @@
 <script>
 export default {
 	name: 'Home',
+	methods: {
+		Logout() {
+			this.$store.dispatch('Logout');
+		},
+	},
 };
 </script>
