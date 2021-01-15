@@ -41,6 +41,15 @@ const routes = [
 			import(/* webpackChunkName: "login" */ '../views/user/Login.vue'),
 		meta: { unauthorized: true },
 	},
+	{
+		path: '/user/manage/auth',
+		name: 'manageAuth',
+		component: () =>
+			import(
+				/* webpackChunkName: "manageAuth" */ '../views/user/AuthManage.vue'
+			),
+		meta: { unauthorized: true },
+	},
 ];
 
 const router = new VueRouter({
