@@ -131,7 +131,7 @@ export class UserService {
       null
     );
     if (result == null) {
-      throw new handleError(401, 'Auth Error');
+      throw new handleError(404, 'Revoke Error');
     }
   };
 }
