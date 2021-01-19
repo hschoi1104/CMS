@@ -8,10 +8,9 @@ axios.interceptors.request.use(
 	function(config) {
 		// Do something before request is sent
 		try {
-			const token =
-				store.state.accessToken === null ? '' : store.state.accessToken;
-
-			axios.defaults.headers.common = { Authorization: `bearer ${token}` };
+			config.defaults.headers.common = {
+				Authorization: 'Bearer ' + store.state.accessToken,
+			};
 		} catch (err) {
 			console.log(err);
 		}
@@ -34,9 +33,15 @@ axios.interceptors.response.use(
 		// Any status codes that falls outside the range of 2xx cause this function to trigger
 		// Do something with response error
 		const result = error.config;
-		if (error.response.data.status === 401 && result.retry === undefined) {
+		if (error.response.status === 401 && result.retry != true) {
 			result.retry = true;
-			await UserService.refreshToken();
+
+			const res = await UserService.refreshToken();
+
+			axios.defaults.headers.common = {
+				Authorization: 'Bearer ' + res.data.result.accessToken,
+			};
+
 			return await axios(result);
 		}
 		return Promise.reject(error);
