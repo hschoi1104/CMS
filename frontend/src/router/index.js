@@ -59,18 +59,25 @@ const router = new VueRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-	if (store.state.accessToken === null) {
-		const result = await UserService.refreshToken();
-		await store.dispatch('RefreshToken', result);
-	}
 	if (
 		to.matched.some(record => record.meta.unauthorized) ||
 		store.state.accessToken
 	) {
 		return next();
 	}
+	if (store.state.accessToken === null) {
+		const result = await UserService.refreshToken();
+		await store.dispatch('RefreshToken', result);
+	}
 	alert('로그인 해주세요');
 	return next('/login');
 });
+
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+	return originalPush.call(this, location).catch(err => {
+		if (err.name !== 'NavigationDuplicated') throw err;
+	});
+};
 
 export default router;
