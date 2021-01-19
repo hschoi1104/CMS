@@ -2,7 +2,7 @@
 	<v-app>
 		<Header />
 
-		<div class="d-flex justify-center align-center" style="height: 100%">
+		<div class="ma-5 pa-5" style="height: 100%">
 			<router-view />
 		</div>
 		<Footer />
