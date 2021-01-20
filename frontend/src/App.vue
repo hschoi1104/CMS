@@ -1,7 +1,10 @@
 <template>
 	<v-app>
 		<Header />
-		<router-view />
+
+		<div class="ma-5 pa-5" style="height: 100%">
+			<router-view />
+		</div>
 		<Footer />
 	</v-app>
 </template>
