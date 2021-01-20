@@ -103,7 +103,7 @@ export class UserService {
     const token = body.refreshToken || cookies.refreshToken;
     const refreshToken = await RefreshTokenDao.getRefreshToken(token);
     if (refreshToken == null || refreshToken == 'Invalid token') {
-      throw new handleError(401, 'Auth Error');
+      throw new handleError(404, 'Auth Error');
     }
 
     const { user } = refreshToken;
