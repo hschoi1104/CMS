@@ -8,11 +8,11 @@ axios.interceptors.request.use(
 	function(config) {
 		// Do something before request is sent
 		try {
-			config.defaults.headers.common = {
+			config.headers.common = {
 				Authorization: 'Bearer ' + store.state.accessToken,
 			};
 		} catch (err) {
-			console.log(err);
+			console.log();
 		}
 		return config;
 	},
