@@ -49,6 +49,12 @@ const routes = [
 				/* webpackChunkName: "manageAuth" */ '../views/user/AuthManage.vue'
 			),
 	},
+	{
+		path: '/board',
+		name: 'board',
+		component: () =>
+			import(/* webpackChunkName: "board" */ '../views/board/Board.vue'),
+	},
 ];
 
 const router = new VueRouter({
