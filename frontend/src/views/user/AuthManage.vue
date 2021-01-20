@@ -13,19 +13,31 @@
 					>
 						<v-card>
 							<v-card-title class="subheading font-weight-bold">
-								{{ user.name }}
+								<v-row align="center">
+									<v-col class="display-1" cols="7">
+										{{ user.id }}
+									</v-col>
+									<v-col cols="5" class="text-right" justify="end">
+										{{ user.name }}</v-col
+									>
+								</v-row>
 							</v-card-title>
-
 							<v-divider></v-divider>
 
-							<v-list dense>
-								<v-list-item>
-									<v-list-item-content>ID:</v-list-item-content>
-									<v-list-item-content class="align-end">
-										{{ user.id }}
+							<v-card-actions>
+								<v-list-item class="grow">
+									<v-list-item-content>
+										<v-list-item-title>관리자 권한</v-list-item-title>
 									</v-list-item-content>
+
+									<v-row align="center" justify="end">
+										<v-switch
+											v-model="user.isManager"
+											@click="updateAuth(user)"
+										></v-switch>
+									</v-row>
 								</v-list-item>
-							</v-list>
+							</v-card-actions>
 						</v-card>
 					</v-col>
 				</v-row>
@@ -44,10 +56,19 @@ export default {
 		};
 	},
 	async created() {
-		this.users = await UserService.getUsers();
+		this.fetch();
 	},
 	methods: {
-		async fetch() {},
+		async fetch() {
+			this.users = await UserService.getUsers();
+		},
+		async updateAuth(user) {
+			console.log(user);
+			await this.$axios.patch(`/user/${user.id}`, {
+				isManager: user.isManager,
+			});
+			this.fetch();
+		},
 	},
 };
 </script>
