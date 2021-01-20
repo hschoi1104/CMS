@@ -48,7 +48,6 @@ const routes = [
 			import(
 				/* webpackChunkName: "manageAuth" */ '../views/user/AuthManage.vue'
 			),
-		meta: { unauthorized: true },
 	},
 ];
 
@@ -59,15 +58,20 @@ const router = new VueRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
+	if (store.state.accessToken === null) {
+		try {
+			const result = await UserService.refreshToken();
+			await store.dispatch('RefreshToken', result);
+		} catch (err) {
+			alert('로그인 해주세요');
+			return next('/login');
+		}
+	}
 	if (
 		to.matched.some(record => record.meta.unauthorized) ||
 		store.state.accessToken
 	) {
 		return next();
-	}
-	if (store.state.accessToken === null) {
-		const result = await UserService.refreshToken();
-		await store.dispatch('RefreshToken', result);
 	}
 	alert('로그인 해주세요');
 	return next('/login');
