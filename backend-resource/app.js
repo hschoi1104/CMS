@@ -20,6 +20,8 @@ app.use(morgan('dev', { stream }));
 
 app.use('/api/v1', indexRouter);
 
+global.logger = logger;
+
 // errorHandler
 // eslint-disable-next-line no-unused-vars
 app.use(function (err, req, res, next) {
