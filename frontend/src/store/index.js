@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from './../service/axios';
 import createPersistedState from 'vuex-persistedstate';
-
+import router from './../router';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -37,7 +37,7 @@ export default new Vuex.Store({
 			} catch (err) {
 				console.log();
 			}
-			localStorage.clear();
+			router.push('/login').catch(() => {});
 			return commit('Logout');
 		},
 		RefreshToken({ commit }, { accessToken }) {
