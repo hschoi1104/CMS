@@ -1,6 +1,6 @@
 import express from 'express';
 var router = express.Router();
-import board from './board.route';
+import guestBook from './guestBook.route';
 
-router.use('/board', board);
+router.use('/guestbook', guestBook);
 module.exports = router;
