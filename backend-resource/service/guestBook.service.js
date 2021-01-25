@@ -1,12 +1,12 @@
-import { BoardDao } from '../dao/Board.dao';
+import { GuestBookDao } from '../dao/guestBook.dao';
 import { handleError } from '../model/Error';
-export class BoardService {
+export class GuestBookService {
   //User
   static createPost = async (req) => {
     let { name, content } = req;
 
     try {
-      const result = await BoardDao.createPost(name, content);
+      const result = await GuestBookDao.createPost(name, content);
       return result;
     } catch (err) {
       throw new handleError(500, 'Create post fail');
@@ -14,7 +14,7 @@ export class BoardService {
   };
 
   static getPosts = async () => {
-    const result = await BoardDao.getPosts();
+    const result = await GuestBookDao.getPosts();
 
     if (result == null) {
       throw new handleError(404, 'Post not exsited');
@@ -22,10 +22,10 @@ export class BoardService {
     return result;
   };
 
-  static deleteUser = async (params) => {
+  static deletePost = async (params) => {
     const { _id } = params;
 
-    const result = await BoardDao.deletePost(_id);
+    const result = await GuestBookDao.deletePost(_id);
 
     if (result.n == 0) {
       throw new handleError(404, 'Post not exsited');
