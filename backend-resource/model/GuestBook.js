@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
-const Board = new Schema({
+const GuestBook = new Schema({
   created: { type: Date, default: Date.now },
   name: {
     type: String,
@@ -11,4 +11,4 @@ const Board = new Schema({
   },
 });
 
-module.exports = mongoose.model('Board', Board);
+module.exports = mongoose.model('GuestBook', GuestBook);
