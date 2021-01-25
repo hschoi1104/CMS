@@ -1,21 +1,21 @@
 import express from 'express';
 var router = express.Router();
-import validate from './../validate/board.validate';
-import { BoardController } from '../controller/board.controller';
+import validate from '../validate/guestBook.validate';
+import { GuestBookController } from '../controller/guestBook.controller';
 import authMiddleware from './../middleware/auth.middleware';
 
 router.post(
   '/',
   authMiddleware(),
   validate.createPost,
-  BoardController.createPost
+  GuestBookController.createPost
 );
-router.get('/', authMiddleware(), BoardController.getPosts);
+router.get('/', authMiddleware(), GuestBookController.getPosts);
 router.delete(
   '/:_id',
   authMiddleware(),
   validate.getPosts,
-  BoardController.deletePost
+  GuestBookController.deletePost
 );
 
 module.exports = router;
