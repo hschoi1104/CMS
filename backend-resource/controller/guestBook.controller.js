@@ -1,12 +1,9 @@
-import { BoardService } from '../service/board.service';
+import { GuestBookService } from '../service/guestBook.service';
 import { Response } from '../model/Response';
-import { logger } from '../config/winston';
-export class BoardController {
+export class GuestBookController {
   static createPost = async (req, res, next) => {
     try {
-      const result = await BoardService.createPost(req.body);
-
-      logger.http('POST /api/v1/user');
+      const result = await GuestBookService.createPost(req.body);
       return res
         .status(201)
         .json(new Response(201, 'success', 'create post success', result));
@@ -17,7 +14,7 @@ export class BoardController {
 
   static getPosts = async (req, res, next) => {
     try {
-      const result = await BoardService.getPosts();
+      const result = await GuestBookService.getPosts();
 
       return res
         .status(200)
@@ -29,7 +26,7 @@ export class BoardController {
 
   static deletePost = async (req, res, next) => {
     try {
-      const result = await BoardService.deletePost(req.params);
+      const result = await GuestBookService.deletePost(req.params);
       return res
         .status(200)
         .json(new Response(200, 'success', 'delete post success', result));
