@@ -16,6 +16,7 @@ function authMiddleware(role = []) {
         try {
           decode = await jwt.verify(token, process.env.JWT_SECRET);
           const user = await UserDao.getUser(decode.id);
+
           if (!user || (role == 'manager' && !user.isManager)) {
             next(new handleError(403, 'Unauthorized'));
           }

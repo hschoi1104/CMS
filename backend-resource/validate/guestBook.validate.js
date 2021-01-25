@@ -1,6 +1,6 @@
 import { check, validationResult } from 'express-validator';
-import { handleError } from './../model/Error';
-import { logger } from './../config/winston';
+import { handleError } from '../model/Error';
+import { logger } from '../config/winston';
 
 exports.createPost = [
   check('name').isString().isLength({ min: 2 }),
