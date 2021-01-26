@@ -1,11 +1,16 @@
 import axios from 'axios';
 import { UserService } from './user.service';
-import store from './../store/index';
-axios.defaults.baseURL = '/api';
+import store from '../store/index';
+//import axiosResource from './axios.resource';
+
+const axiosAuth = axios.create({
+	baseURL: 'http://localhost:5000/api/v1/',
+	withCredentials: true,
+});
 
 // Add a request interceptor
-axios.interceptors.request.use(
-	function(config) {
+axiosAuth.interceptors.request.use(
+	async function(config) {
 		// Do something before request is sent
 		try {
 			config.headers.common = {
@@ -14,7 +19,7 @@ axios.interceptors.request.use(
 		} catch (err) {
 			console.log();
 		}
-		return config;
+		return await config;
 	},
 	function(error) {
 		// Do something with request error
@@ -23,7 +28,7 @@ axios.interceptors.request.use(
 );
 
 // Add a response interceptor
-axios.interceptors.response.use(
+axiosAuth.interceptors.response.use(
 	function(response) {
 		// Any status code that lie within the range of 2xx cause this function to trigger
 		// Do something with response data
@@ -35,17 +40,15 @@ axios.interceptors.response.use(
 		const result = error.config;
 		if (error.response.status === 401 && result.retry != true) {
 			result.retry = true;
-
 			const res = await UserService.refreshToken();
-
-			axios.defaults.headers.common = {
+			await store.commit('RefreshToken', res.data.result);
+			error.response.config.headers = {
 				Authorization: 'Bearer ' + res.data.result.accessToken,
 			};
-
-			return await axios(result);
+			return await axiosAuth(result);
 		}
 		return Promise.reject(error);
 	},
 );
 
-export default axios;
+export default axiosAuth;

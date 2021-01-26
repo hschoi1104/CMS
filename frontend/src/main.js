@@ -3,11 +3,12 @@ import App from './App.vue';
 import router from './router';
 import store from './store/index';
 import vuetify from './plugins/vuetify';
-import axios from './service/axios';
+import axiosAuth from './service/axios.auth';
+import axiosResource from './service/axios.resource';
 
 Vue.config.productionTip = false;
-Vue.prototype.$axios = axios;
-
+Vue.prototype.$axiosAuth = axiosAuth;
+Vue.prototype.$axiosResource = axiosResource;
 new Vue({
 	router,
 	store,

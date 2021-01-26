@@ -2,7 +2,7 @@
 	<v-container class="fill-height" fluid>
 		<v-row align="center" justify="center">
 			<v-col cols="12" sm="8" md="4">
-				<v-card tile minHeight="95%" class="elevation-12">
+				<v-card tile minHeight="95%" class="elevation-12 ma-3 pa-3">
 					<v-toolbar flat color="#2F5FD2">
 						<v-toolbar-title class="white--text">
 							회원가입
@@ -151,7 +151,7 @@ export default {
 		},
 		async register() {
 			try {
-				const result = await this.$axios.post('/user', {
+				const result = await this.$axiosAuth.post('/user', {
 					id: this.id,
 					password: this.password,
 					name: this.name,
