@@ -10,7 +10,14 @@ export class GuestBookDao {
   };
 
   static getPosts = async () => {
-    return GuestBook.find({}, { p__v: 0 });
+    return GuestBook.find(
+      {},
+      {
+        __v: 0,
+      }
+    ).sort({
+      created: -1,
+    });
   };
 
   static deletePost = async (_id) => {
