@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import axios from './../service/axios';
+import axiosAuth from '../service/axios.auth';
+import axiosResource from './../service/axios.resource';
 import createPersistedState from 'vuex-persistedstate';
 import router from './../router';
 Vue.use(Vuex);
@@ -20,20 +21,21 @@ export default new Vuex.Store({
 	},
 	actions: {
 		async Login({ commit }, { id, password }) {
-			const result = await axios.post('/user/authenticate', {
+			const result = await axiosAuth.post('/user/authenticate', {
 				id,
 				password,
 			});
-			console.log('login' + result.data.result.accessToken);
-			axios.defaults.headers.common = {
+			axiosAuth.defaults.headers.common = {
 				Authorization: 'Bearer ' + result.data.result.accessToken,
 			};
-
+			axiosResource.defaults.headers.common = {
+				Authorization: 'Bearer ' + result.data.result.accessToken,
+			};
 			return commit('Login', result.data.result);
 		},
 		async Logout({ commit }) {
 			try {
-				await axios.post('/user/revoke-token');
+				await axiosAuth.post('/user/revoke-token');
 			} catch (err) {
 				console.log();
 			}
