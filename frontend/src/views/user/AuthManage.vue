@@ -12,9 +12,9 @@
 						lg="3"
 					>
 						<v-card>
-							<v-card-title class="subheading font-weight-bold">
+							<v-card-title>
 								<v-row align="center">
-									<v-col class="display-1" cols="7">
+									<v-col class="font-weight-bold" cols="7">
 										{{ user.id }}
 									</v-col>
 									<v-col cols="5" class="text-right" justify="end">
@@ -56,18 +56,17 @@ export default {
 		};
 	},
 	async created() {
-		this.fetch();
+		await this.fetch();
 	},
 	methods: {
 		async fetch() {
 			this.users = await UserService.getUsers();
 		},
 		async updateAuth(user) {
-			console.log(user);
-			await this.$axios.patch(`/user/${user.id}`, {
+			await this.$axiosAuth.patch(`/user/${user.id}`, {
 				isManager: user.isManager,
 			});
-			this.fetch();
+			await this.fetch();
 		},
 	},
 };
