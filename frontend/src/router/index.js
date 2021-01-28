@@ -50,10 +50,18 @@ const routes = [
 			),
 	},
 	{
+		path: '/guestbook',
+		name: 'guestbook',
+		component: () =>
+			import(
+				/* webpackChunkName: "guestbook" */ '../views/guestBook/GuestBook.vue'
+			),
+	},
+	{
 		path: '/board',
 		name: 'board',
 		component: () =>
-			import(/* webpackChunkName: "board" */ '../views/board/Board.vue'),
+			import(/* webpackChunkName: "board" */ '../views/Board/Board.vue'),
 	},
 ];
 
