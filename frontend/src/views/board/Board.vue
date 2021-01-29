@@ -23,7 +23,7 @@
 						></v-text-field>
 						<template v-if="$vuetify.breakpoint.mdAndUp">
 							<v-spacer></v-spacer>
-							<v-btn @click="openWirteDialog" color="primary">
+							<v-btn @click="openDialog('create')" color="primary">
 								게시글 작성
 							</v-btn>
 						</template>
@@ -40,22 +40,41 @@
 							md="4"
 							lg="6"
 						>
-							<v-card class="ma-3 pa-2">
+							<v-card class="ma-3 pa-2" @click="readPost(item._id)">
 								<v-row>
 									<v-col cols="5">
 										<v-img
+											v-if="item.url === ''"
 											justify="center"
 											align="center"
 											:src="
 												`https://user-images.githubusercontent.com/43382559/105813660-864fcb00-5ff3-11eb-8e3b-27291e8b3030.png`
 											"
-											:lazy-src="
-												`https://picsum.photos/10/6?image=${1 * 5 + 10}`
-											"
 											aspect-ratio="1"
 											class="grey lighten-2"
-											max-height="250"
-											max-width="250"
+											max-height="100%"
+										>
+											<template v-slot:placeholder>
+												<v-row
+													class="fill-height ma-0"
+													align="center"
+													justify="center"
+												>
+													<v-progress-circular
+														indeterminate
+														color="grey lighten-5"
+													></v-progress-circular>
+												</v-row>
+											</template>
+										</v-img>
+										<v-img
+											v-if="item.url !== ''"
+											justify="center"
+											align="center"
+											:src="`${item.url}`"
+											aspect-ratio="1"
+											class="grey lighten-2"
+											max-height="100%"
 										>
 											<template v-slot:placeholder>
 												<v-row
@@ -163,7 +182,7 @@
 			</v-data-iterator>
 		</div>
 		<template>
-			<v-dialog v-model="post.dialog" persistent max-width="60%">
+			<v-dialog v-model="dialog.create" persistent max-width="60%">
 				<validation-observer ref="observer" v-slot="{ invalid }">
 					<v-card>
 						<v-card-title>
@@ -209,7 +228,13 @@
 											></v-textarea>
 										</validation-provider>
 									</v-col>
-
+									<v-col cols="12" sm="12">
+										<v-text-field
+											v-model="post.url"
+											label="url"
+											hint="이미지 url을 입력해주세요"
+										></v-text-field>
+									</v-col>
 									<v-col cols="12" sm="12">
 										<div>
 											<v-file-input
@@ -227,7 +252,7 @@
 						</v-card-text>
 						<v-card-actions>
 							<v-spacer></v-spacer>
-							<v-btn color="blue darken-1" text @click="closeWirteDialog">
+							<v-btn color="blue darken-1" text @click="closeDialog">
 								닫기
 							</v-btn>
 							<v-btn
@@ -241,6 +266,127 @@
 						</v-card-actions>
 					</v-card>
 				</validation-observer>
+			</v-dialog>
+		</template>
+		<template>
+			<v-dialog v-model="dialog.read" persistent max-width="60%">
+				<v-card>
+					<v-card-title>
+						<span class="display-1">{{ post.title }}</span>
+					</v-card-title>
+					<v-divider></v-divider>
+					<v-card-text>
+						<v-container>
+							<v-row class="ma-1">
+								<v-col cols="4">
+									<v-img
+										v-if="post.urlR === ''"
+										justify="center"
+										align="center"
+										:src="
+											`https://user-images.githubusercontent.com/43382559/105813660-864fcb00-5ff3-11eb-8e3b-27291e8b3030.png`
+										"
+										aspect-ratio="1"
+										class="grey lighten-2"
+										max-height="100%"
+									>
+										<template v-slot:placeholder>
+											<v-row
+												class="fill-height ma-0"
+												align="center"
+												justify="center"
+											>
+												<v-progress-circular
+													indeterminate
+													color="grey lighten-5"
+												></v-progress-circular>
+											</v-row>
+										</template>
+									</v-img>
+									<v-img
+										v-if="post.urlR !== ''"
+										justify="center"
+										align="center"
+										:src="`${post.urlR}`"
+										aspect-ratio="1"
+										class="grey lighten-2"
+										max-height="100%"
+									>
+										<template v-slot:placeholder>
+											<v-row
+												class="fill-height ma-0"
+												align="center"
+												justify="center"
+											>
+												<v-progress-circular
+													indeterminate
+													color="grey lighten-5"
+												></v-progress-circular>
+											</v-row>
+										</template>
+									</v-img>
+								</v-col>
+								<v-col cols="8">
+									<v-row>
+										<v-text-field
+											v-model="post.author"
+											label="작성자"
+											readonly
+										></v-text-field>
+									</v-row>
+									<v-row>
+										<v-text-field
+											v-model="post.created"
+											label="생성일"
+											readonly
+										></v-text-field>
+									</v-row>
+									<v-row>
+										<v-text-field
+											v-model="post.modified"
+											label="최종 수정 날짜"
+											readonly
+										></v-text-field>
+									</v-row>
+									<v-row>
+										<v-textarea
+											v-model="post.content"
+											name="content"
+											label="내용"
+											readonly
+										></v-textarea>
+									</v-row>
+								</v-col>
+							</v-row>
+							<v-row class="ma-2">
+								<span class="display-5">첨부파일</span>
+							</v-row>
+							<v-row>
+								<v-col cols="12" sm="12">
+									<v-chip
+										v-model="post.url"
+										class="ma-2"
+										filter
+										filter-icon="mdi-minus"
+									>
+									</v-chip>
+								</v-col>
+							</v-row>
+						</v-container>
+					</v-card-text>
+					<v-card-actions>
+						<v-btn color="error darken-1" text @click="deletePost(post._id)">
+							삭제
+						</v-btn>
+						<v-spacer></v-spacer>
+						<v-btn color="blue darken-1" text @click="updatePost(post)">
+							수정
+						</v-btn>
+						<v-btn color="blue darken-1" text @click="closeDialog()">
+							닫기
+						</v-btn>
+					</v-card-actions>
+				</v-card>
 			</v-dialog>
 		</template>
 	</v-container>
@@ -289,12 +435,16 @@ export default {
 			posts: [],
 			sortBy: 'Name',
 			keys: ['author', 'created', 'modified', 'content'],
-			dialog: false,
 			post: {
-				dialog: false,
+				_id: '',
 				title: '',
 				content: '',
-				url: '',
+				urlR: '',
+			},
+			dialog: {
+				create: false,
+				read: false,
+				update: false,
 			},
 		};
 	},
@@ -336,20 +486,43 @@ export default {
 				item.modified = moment(item.modified).format(
 					'YYYY년 MM월 DD일 mm분 ss초',
 				);
+				if (item.content.length > 20)
+					item.content = item.content.substring(0, 20) + '...';
 			});
 		},
-		openWirteDialog() {
-			this.post.dialog = true;
+		openDialog(option) {
+			this.dialog.create = false;
+			this.dialog.read = false;
+			this.dialog.update = false;
+			if (option === 'create') this.dialog.create = true;
+			if (option === 'update') this.dialog.update = true;
+			if (option === 'read') this.dialog.read = true;
 		},
-		closeWirteDialog() {
-			this.post.dialog = false;
-			this.post.title = '';
-			this.post.content = '';
-			this.post.url = '';
+		closeDialog() {
+			this.dialog.create = false;
+			this.dialog.read = false;
+			this.dialog.update = false;
+			this.post = new Object();
 		},
 		async creatPost(post) {
 			await BoardService.createPost(post);
-			this.closeWirteDialog();
+			this.closeDialog();
+		},
+		async readPost(_id) {
+			const result = await BoardService.readPost(_id);
+			this.post = result[0];
+			this.post.urlR = result[0].url;
+			this.post.created = moment(this.post.created).format(
+				'YYYY년 MM월 DD일 HH:MM:SS',
+			);
+			this.post.modified = moment(this.post.modified).format(
+				'YYYY년 MM월 DD일 HH:MM:SS',
+			);
+			this.openDialog('read');
+		},
+		async deletePost(_id) {
+			await BoardService.deletePost(_id);
+			this.closeDialog();
 			await this.fetch();
 		},
 	},

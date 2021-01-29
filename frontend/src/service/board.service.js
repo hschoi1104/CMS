@@ -14,4 +14,20 @@ export class BoardService {
 			return err;
 		}
 	};
+	static readPost = async _id => {
+		try {
+			const result = await axiosResource.get(`/board/${_id}`);
+			return result.data.result;
+		} catch (err) {
+			return err;
+		}
+	};
+	static deletePost = async _id => {
+		try {
+			const result = await axiosResource.delete(`/board/${_id}`);
+			return result.data.result;
+		} catch (err) {
+			return err;
+		}
+	};
 }
