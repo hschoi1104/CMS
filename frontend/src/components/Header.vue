@@ -19,6 +19,22 @@
 						<v-card-text class="white--text">권한 관리</v-card-text>
 					</v-card>
 					<v-card
+						v-if="loginCheck"
+						flat
+						color="#2F5FD2"
+						@click="Push('/board')"
+					>
+						<v-card-text class="white--text">게시판</v-card-text>
+					</v-card>
+					<v-card
+						v-if="loginCheck"
+						flat
+						color="#2F5FD2"
+						@click="Push('/guestBook')"
+					>
+						<v-card-text class="white--text">방명록</v-card-text>
+					</v-card>
+					<v-card
 						v-if="!loginCheck"
 						flat
 						color="#2F5FD2"

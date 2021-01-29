@@ -1,10 +1,10 @@
-import axios from './axios';
-
+import axiosAuth from './axios.auth';
+import store from './../store/index';
 export class UserService {
 	static refreshToken = async () => {
 		try {
-			const result = await axios.post('/user/refresh-token');
-			console.log('userservice  ' + result);
+			const result = await axiosAuth.post('/user/refresh-token');
+			await store.commit('RefreshToken', result.data.result);
 			return result;
 		} catch (err) {
 			return err;
@@ -12,7 +12,7 @@ export class UserService {
 	};
 	static getUsers = async () => {
 		try {
-			const result = await axios.get('/user');
+			const result = await axiosAuth.get('/user');
 			return result.data.result;
 		} catch (err) {
 			return err;

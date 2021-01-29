@@ -6,10 +6,17 @@ import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import indexRouter from './routes/index';
+import cors from 'cors';
 
 var app = express();
 dotenv.config();
 
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -17,6 +24,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(morgan('dev', { stream }));
 
 app.use('/api/v1', indexRouter);
+
+global.logger = logger;
 
 // errorHandler
 // eslint-disable-next-line no-unused-vars

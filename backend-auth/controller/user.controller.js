@@ -1,13 +1,11 @@
 import { UserService } from '../service/user.service';
 import { Response } from '../model/Response';
-import { logger } from '../config/winston';
 import { TokenCookie } from '../util/tokenCookie';
 export class UserController {
   static createUser = async (req, res, next) => {
     try {
       const result = await UserService.createUser(req.body);
 
-      logger.http('POST /api/v1/user');
       return res
         .status(201)
         .json(new Response(201, 'success', 'create user success', result));

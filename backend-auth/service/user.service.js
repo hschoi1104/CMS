@@ -12,9 +12,9 @@ export class UserService {
     const salt = await bcrypt.genSalt(12);
     password = await bcrypt.hash(password, salt);
 
-    const exsited = await UserDao.getUser(id);
+    const existed = await UserDao.getUser(id);
 
-    if (exsited != null) {
+    if (existed != null) {
       throw new handleError(409, 'User already existed');
     }
 
