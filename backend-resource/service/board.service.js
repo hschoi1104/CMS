@@ -15,7 +15,7 @@ export class BoardService {
   static getPost = async (params) => {
     let { _id } = params;
     const result = await BoardDao.getPost(_id);
-    console.log(result);
+
     if (result == null) {
       throw new handleError(404, 'Post not exsited');
     }
