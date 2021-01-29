@@ -379,6 +379,116 @@
 							삭제
 						</v-btn>
 						<v-spacer></v-spacer>
+						<v-btn color="blue darken-1" text @click="openDialog('update')">
+							수정
+						</v-btn>
+						<v-btn color="blue darken-1" text @click="closeDialog()">
+							닫기
+						</v-btn>
+					</v-card-actions>
+				</v-card>
+			</v-dialog>
+		</template>
+		<template>
+			<v-dialog v-model="dialog.update" persistent max-width="60%">
+				<v-card>
+					<v-card-title>
+						<span class="display-1">게시글 수정</span>
+					</v-card-title>
+					<v-divider></v-divider>
+					<v-card-text>
+						<v-container>
+							<v-row class="ma-1">
+								<v-col cols="4">
+									<v-img
+										v-if="post.urlR === ''"
+										justify="center"
+										align="center"
+										:src="
+											`https://user-images.githubusercontent.com/43382559/105813660-864fcb00-5ff3-11eb-8e3b-27291e8b3030.png`
+										"
+										aspect-ratio="1"
+										class="grey lighten-2"
+										max-height="100%"
+									>
+										<template v-slot:placeholder>
+											<v-row
+												class="fill-height ma-0"
+												align="center"
+												justify="center"
+											>
+												<v-progress-circular
+													indeterminate
+													color="grey lighten-5"
+												></v-progress-circular>
+											</v-row>
+										</template>
+									</v-img>
+									<v-img
+										v-if="post.urlR !== ''"
+										justify="center"
+										align="center"
+										:src="`${post.urlR}`"
+										aspect-ratio="1"
+										class="grey lighten-2"
+										max-height="100%"
+									>
+										<template v-slot:placeholder>
+											<v-row
+												class="fill-height ma-0"
+												align="center"
+												justify="center"
+											>
+												<v-progress-circular
+													indeterminate
+													color="grey lighten-5"
+												></v-progress-circular>
+											</v-row>
+										</template>
+									</v-img>
+								</v-col>
+								<v-col cols="8">
+									<v-row>
+										<v-text-field
+											v-model="post.title"
+											label="제목"
+										></v-text-field>
+									</v-row>
+									<v-row>
+										<v-text-field
+											v-model="post.author"
+											label="작성자"
+											readonly
+											disabled
+										></v-text-field>
+									</v-row>
+									<v-row>
+										<v-textarea
+											v-model="post.content"
+											name="content"
+											label="내용"
+										></v-textarea>
+									</v-row>
+								</v-col>
+							</v-row>
+							<v-row class="ma-2">
+								<span class="display-5">첨부파일</span>
+							</v-row>
+							<v-row>
+								<v-col cols="12" sm="12">
+									<v-chip
+										v-model="post.url"
+										class="ma-2"
+										filter
+										filter-icon="mdi-minus"
+									>
+									</v-chip>
+								</v-col>
+							</v-row>
+						</v-container>
+					</v-card-text>
+					<v-card-actions>
+						<v-spacer></v-spacer>
 						<v-btn color="blue darken-1" text @click="updatePost(post)">
 							수정
 						</v-btn>
@@ -522,6 +632,11 @@ export default {
 		},
 		async deletePost(_id) {
 			await BoardService.deletePost(_id);
+			this.closeDialog();
+			await this.fetch();
+		},
+		async updatePost(post) {
+			await BoardService.updatePost(post);
 			this.closeDialog();
 			await this.fetch();
 		},
