@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { UserService } from './user.service';
 import store from '../store/index';
+import router from './../router';
 //import axiosResource from './axios.resource';
 
 const axiosAuth = axios.create({
@@ -46,6 +47,9 @@ axiosAuth.interceptors.response.use(
 				Authorization: 'Bearer ' + res.data.result.accessToken,
 			};
 			return await axiosAuth(result);
+		} else {
+			alert('로그인이 필요합니다.');
+			router.push('/login').catch(() => {});
 		}
 		return Promise.reject(error);
 	},
