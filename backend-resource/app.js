@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import indexRouter from './routes/index';
 import cors from 'cors';
+import autoIncrement from 'mongoose-auto-increment';
 
 var app = express();
 dotenv.config();
@@ -50,5 +51,5 @@ mongoose.connect(process.env.MONGO_URI, {
   useUnifiedTopology: true,
   useFindAndModify: false,
 });
-
+autoIncrement.initialize(mongoose.connection);
 module.exports = app;
