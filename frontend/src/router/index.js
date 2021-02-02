@@ -63,6 +63,14 @@ const routes = [
 		component: () =>
 			import(/* webpackChunkName: "board" */ '../views/board/Board.vue'),
 	},
+	{
+		path: '/arobject',
+		name: 'arobject',
+		component: () =>
+			import(
+				/* webpackChunkName: "arobject" */ '../views/arObject/ArObject.vue'
+			),
+	},
 ];
 
 const router = new VueRouter({
