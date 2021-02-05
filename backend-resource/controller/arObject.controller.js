@@ -4,7 +4,8 @@ import { Response } from '../model/Response';
 export class ArObjectController {
   static createArObject = async (req, res, next) => {
     try {
-      const result = await ArObjectService.createArObject(req.body);
+      const result = await ArObjectService.createArObject(req.body, req.files);
+
       return res
         .status(201)
         .json(new Response(201, 'success', 'create ArObject success', result));
