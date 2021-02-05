@@ -3,11 +3,13 @@ var router = express.Router();
 import validate from '../validate/arObject.validate';
 import { ArObjectController } from '../controller/arObject.controller';
 import authMiddleware from '../middleware/auth.middleware';
+import upload from '../middleware/upload.middleware';
 
 router.post(
   '/',
   authMiddleware(),
   validate.createArObject,
+  upload.array('image'),
   ArObjectController.createArObject
 );
 router.get(
