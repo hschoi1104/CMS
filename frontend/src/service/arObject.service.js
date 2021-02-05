@@ -1,14 +1,12 @@
 import axiosResource from './axios.resource';
 
 export class ArObjectService {
-	static createArObject = async ArObject => {
+	static createArObject = async formData => {
 		try {
-			const result = await axiosResource.post('/arobject', {
-				name: ArObject.name,
-				content: ArObject.content,
-				s3Info: ArObject.s3Info,
-				category: ArObject.category,
-				modifiedManager: ArObject.modifiedManager,
+			const result = await axiosResource.post('/arobject', formData, {
+				enctype: {
+					'Content-Type': 'multipart/form-data',
+				},
 			});
 			return result.data.result;
 		} catch (err) {
