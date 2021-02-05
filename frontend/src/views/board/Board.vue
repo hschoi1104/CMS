@@ -32,14 +32,7 @@
 
 				<template v-slot:default="props">
 					<v-row>
-						<v-col
-							v-for="item in props.items"
-							:key="item._id"
-							cols="12"
-							sm="6"
-							md="4"
-							lg="6"
-						>
+						<v-col v-for="item in props.items" :key="item._id" cols="12" lg="6">
 							<v-card class="ma-3 pa-2" @click="readPost(item._id)">
 								<v-row>
 									<v-col cols="5">
@@ -53,6 +46,7 @@
 											aspect-ratio="1"
 											class="grey lighten-2"
 											max-height="100%"
+											max-width="100%"
 										>
 											<template v-slot:placeholder>
 												<v-row
