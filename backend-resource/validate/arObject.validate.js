@@ -3,10 +3,10 @@ import { handleError } from '../model/Error';
 import { logger } from '../config/winston';
 
 exports.createArObject = [
-  check('name').isString().isLength({ min: 2 }),
-  check('category').isString().isLength({ min: 2 }),
-  check('modifiedManager').isString().isLength({ min: 2 }),
-  check('content').isString().isLength({ min: 2 }),
+  // check('name').isString().isLength({ min: 2 }),
+  // check('category').isString().isLength({ min: 2 }),
+  // check('modifiedManager').isString().isLength({ min: 2 }),
+  // check('content').isString().isLength({ min: 2 }),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -29,10 +29,10 @@ exports.getArObject = [
 
 exports.updateArObject = [
   check('objectId').isNumeric(),
-  check('name').isString().isLength({ min: 2 }),
-  check('category').isString().isLength({ min: 2 }),
-  check('modifiedManager').isString().isLength({ min: 2 }),
-  check('content').isString().isLength({ min: 2 }),
+  // check('name').isString().isLength({ min: 2 }),
+  // check('category').isString().isLength({ min: 2 }),
+  // check('modifiedManager').isString().isLength({ min: 2 }),
+  // check('content').isString().isLength({ min: 2 }),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
