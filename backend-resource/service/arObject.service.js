@@ -1,8 +1,8 @@
 import { ArObjectDao } from '../dao/arObject.dao';
 import { handleError } from '../model/Error';
 export class ArObjectService {
-  static createArObject = async (req) => {
-    let { name, category, s3Info, modifiedManager, content } = req;
+  static createArObject = async (req, s3Info) => {
+    let { name, category, modifiedManager, content } = req;
     try {
       const result = await ArObjectDao.createArObject(
         name,
