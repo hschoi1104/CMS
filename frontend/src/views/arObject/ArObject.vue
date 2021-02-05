@@ -84,7 +84,7 @@
 												v-if="item.s3Info !== ''"
 												justify="center"
 												align="center"
-												:src="`${item.s3Info}`"
+												:src="getImgUrl(item)"
 												aspect-ratio="1"
 												class="grey lighten-2"
 												max-height="100%"
@@ -189,7 +189,7 @@
 							<v-row class="ma-1">
 								<v-col cols="5">
 									<v-img
-										v-if="post.urlR === ''"
+										v-if="getImgUrl(post) === ''"
 										justify="center"
 										align="center"
 										:src="
@@ -213,10 +213,10 @@
 										</template>
 									</v-img>
 									<v-img
-										v-if="post.urlR !== ''"
+										v-if="getImgUrl(post) !== ''"
 										justify="center"
 										align="center"
-										:src="`${post.urlR}`"
+										:src="getImgUrl(post)"
 										aspect-ratio="1"
 										class="grey lighten-2"
 										max-height="100%"
@@ -306,11 +306,12 @@
 							<v-row>
 								<v-col cols="12" sm="12">
 									<v-chip
-										v-model="post.url"
+										v-for="file in post.s3Info"
+										:key="file.originalname"
 										class="ma-2"
-										filter
-										filter-icon="mdi-minus"
+										@click.prevent="downloadItem(file.location, file.location)"
 									>
+										{{ file.originalname }}
 									</v-chip>
 								</v-col>
 							</v-row>
@@ -347,7 +348,7 @@
 							<v-row class="ma-1">
 								<v-col cols="4">
 									<v-img
-										v-if="post.s3Info === ''"
+										v-if="getImgUrl(post) === ''"
 										justify="center"
 										align="center"
 										:src="
@@ -371,10 +372,10 @@
 										</template>
 									</v-img>
 									<v-img
-										v-if="post.urlR !== ''"
+										v-if="getImgUrl(post) !== ''"
 										justify="center"
 										align="center"
-										:src="`${post.urlR}`"
+										:src="getImgUrl(post)"
 										aspect-ratio="1"
 										class="grey lighten-2"
 										max-height="100%"
@@ -445,107 +446,115 @@
 		</template>
 		<template>
 			<v-dialog v-model="dialog.create" persistent max-width="60%">
-				<v-card>
-					<v-card-title>
-						<span class="display-1">AR Object 업로드</span>
-					</v-card-title>
-					<v-divider></v-divider>
-					<v-card-text>
-						<v-container>
-							<v-row class="ma-1">
-								<v-col cols="4">
-									<v-img
-										v-if="post.s3Info === ''"
-										justify="center"
-										align="center"
-										:src="
-											`https://user-images.githubusercontent.com/43382559/105813660-864fcb00-5ff3-11eb-8e3b-27291e8b3030.png`
-										"
-										aspect-ratio="1"
-										class="grey lighten-2"
-										max-height="100%"
-									>
-										<template v-slot:placeholder>
-											<v-row
-												class="fill-height ma-0"
-												align="center"
-												justify="center"
-											>
-												<v-progress-circular
-													indeterminate
-													color="grey lighten-5"
-												></v-progress-circular>
-											</v-row>
-										</template>
-									</v-img>
-									<v-img
-										v-if="post.urlR !== ''"
-										justify="center"
-										align="center"
-										:src="`${post.urlR}`"
-										aspect-ratio="1"
-										class="grey lighten-2"
-										max-height="100%"
-									>
-										<template v-slot:placeholder>
-											<v-row
-												class="fill-height ma-0"
-												align="center"
-												justify="center"
-											>
-												<v-progress-circular
-													indeterminate
-													color="grey lighten-5"
-												></v-progress-circular>
-											</v-row>
-										</template>
-									</v-img>
-								</v-col>
-								<v-col cols="8">
-									<v-row>
-										<v-text-field
-											v-model="post.name"
-											label="오브젝트명"
-										></v-text-field>
-									</v-row>
-									<v-row>
-										<v-combobox
-											v-model="post.category"
-											:items="categorys"
-											label="카테고리"
-										></v-combobox>
-									</v-row>
-									<v-row>
-										<v-textarea
-											v-model="post.content"
-											name="content"
-											label="내용"
-										></v-textarea>
-									</v-row>
-								</v-col>
-							</v-row>
-							<v-row class="ma-2">
-								<span class="display-5">첨부파일</span>
-							</v-row>
-							<v-row>
-								<v-file-input
-									multiple
-									show-size
-									truncate-length="22"
-								></v-file-input>
-							</v-row>
-						</v-container>
-					</v-card-text>
-					<v-card-actions>
-						<v-spacer></v-spacer>
-						<v-btn color="blue darken-1" text @click="createArObject(post)">
-							생성
-						</v-btn>
-						<v-btn color="blue darken-1" text @click="closeDialog()">
-							취소
-						</v-btn>
-					</v-card-actions>
-				</v-card>
+				<v-form>
+					<v-card>
+						<v-card-title>
+							<span class="display-1">AR Object 업로드</span>
+						</v-card-title>
+						<v-divider></v-divider>
+						<v-card-text>
+							<v-container>
+								<v-row class="ma-1">
+									<v-col cols="4">
+										<v-img
+											v-if="getImgUrl(post) === ''"
+											justify="center"
+											align="center"
+											:src="
+												`https://user-images.githubusercontent.com/43382559/105813660-864fcb00-5ff3-11eb-8e3b-27291e8b3030.png`
+											"
+											aspect-ratio="1"
+											class="grey lighten-2"
+											max-height="100%"
+										>
+											<template v-slot:placeholder>
+												<v-row
+													class="fill-height ma-0"
+													align="center"
+													justify="center"
+												>
+													<v-progress-circular
+														indeterminate
+														color="grey lighten-5"
+													></v-progress-circular>
+												</v-row>
+											</template>
+										</v-img>
+										<v-img
+											v-if="getImgUrl(post) !== ''"
+											justify="center"
+											align="center"
+											:src="getImgUrl(post)"
+											aspect-ratio="1"
+											class="grey lighten-2"
+											max-height="100%"
+										>
+											<template v-slot:placeholder>
+												<v-row
+													class="fill-height ma-0"
+													align="center"
+													justify="center"
+												>
+													<v-progress-circular
+														indeterminate
+														color="grey lighten-5"
+													></v-progress-circular>
+												</v-row>
+											</template>
+										</v-img>
+									</v-col>
+									<v-col cols="8">
+										<v-row>
+											<v-text-field
+												v-model="post.name"
+												label="오브젝트명"
+											></v-text-field>
+										</v-row>
+										<v-row>
+											<v-combobox
+												v-model="post.category"
+												:items="categorys"
+												label="카테고리"
+											></v-combobox>
+										</v-row>
+										<v-row>
+											<v-textarea
+												v-model="post.content"
+												name="content"
+												label="내용"
+											></v-textarea>
+										</v-row>
+									</v-col>
+								</v-row>
+								<v-row class="ma-2">
+									<span class="display-5">첨부파일</span>
+								</v-row>
+								<v-row>
+									<v-file-input
+										v-model="post.file"
+										counter
+										multiple
+										show-size
+										truncate-length="15"
+									></v-file-input>
+								</v-row>
+							</v-container>
+						</v-card-text>
+						<v-card-actions>
+							<v-spacer></v-spacer>
+							<v-btn
+								v-on:click.prevent="createPost()"
+								color="blue darken-1"
+								text
+							>
+								생성
+							</v-btn>
+							<v-btn color="blue darken-1" text @click="closeDialog()">
+								취소
+							</v-btn>
+						</v-card-actions>
+					</v-card>
+				</v-form>
 			</v-dialog>
 		</template>
 	</v-container>
@@ -573,7 +582,7 @@ export default {
 				read: false,
 				update: false,
 			},
-			post: {},
+			post: [{ s3Info: '' }],
 		};
 	},
 	async created() {
@@ -623,6 +632,21 @@ export default {
 			this.dialog.create = false;
 			this.dialog.update = false;
 		},
+		async createPost() {
+			console.log(this.post.file);
+			const formData = new FormData();
+			formData.append('name', this.post.name);
+			formData.append('modifiedManager', 'hschoi1104');
+			for (let file of this.post.file) {
+				formData.append('image', file, file.name);
+			}
+			formData.append('content', this.post.content);
+			formData.append('category', this.post.category);
+			formData.append('modified', new Date());
+			await ArObjectService.createArObject(formData);
+			this.closeDialog();
+			await this.fetch();
+		},
 		async deletePost(objectId) {
 			await ArObjectService.deleteArObject(objectId);
 			this.closeDialog();
@@ -640,6 +664,23 @@ export default {
 			if (option === 'create') this.dialog.create = true;
 			if (option === 'update') this.dialog.update = true;
 			if (option === 'read') this.dialog.read = true;
+		},
+		downloadItem(url, label) {
+			this.$axiosResource
+				.get(url, { responseType: 'blob' })
+				.then(response => {
+					const blob = new Blob([response.data], { type: 'application/image' });
+					const link = document.createElement('a');
+					link.href = URL.createObjectURL(blob);
+					link.download = label;
+					link.click();
+					URL.revokeObjectURL(link.href);
+				})
+				.catch(console.error);
+		},
+		getImgUrl(post) {
+			if (post.s3Info !== undefined) return post.s3Info[0].location;
+			else return '';
 		},
 	},
 };
