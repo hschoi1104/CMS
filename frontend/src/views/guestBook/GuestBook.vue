@@ -93,17 +93,15 @@ export default {
 				this.post.name = '';
 				this.post.content = '';
 				await this.fetch();
-			} catch (err) {
-				console.log(err);
-			}
+				// eslint-disable-next-line no-empty
+			} catch (err) {}
 		},
 		async deletePost(post) {
 			try {
 				await this.$axiosResource.delete(`/guestbook/${post._id}`);
 				await this.fetch();
-			} catch (err) {
-				console.log();
-			}
+				// eslint-disable-next-line no-empty
+			} catch (err) {}
 		},
 	},
 };

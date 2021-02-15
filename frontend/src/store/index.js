@@ -36,9 +36,8 @@ export default new Vuex.Store({
 		async Logout({ commit }) {
 			try {
 				await axiosAuth.post('/user/revoke-token');
-			} catch (err) {
-				console.log();
-			}
+				// eslint-disable-next-line no-empty
+			} catch (err) {}
 			router.push('/login').catch(() => {});
 			return commit('Logout');
 		},
