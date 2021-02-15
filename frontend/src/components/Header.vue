@@ -41,13 +41,13 @@
 						@click="Push('/guestBook')"
 					>
 						<v-card-text class="white--text">방명록</v-card-text>
-					</v-card>
+					</v-card>-->
 					<v-card
 						v-if="!loginCheck"
 						flat
 						color="#2F5FD2"
 						@click="Push('/signup')"
-					> -->
+					>
 						<v-card-text class="white--text">회원가입</v-card-text>
 					</v-card>
 
