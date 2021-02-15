@@ -10,6 +10,10 @@ ENV PORT 3000
 
 ENV JWT_SECRET "your_secret"
 
+ENV accessKeyId your_key
+
+ENV secretAccessKey your_key
+
 ENV region ap-northeast-2
 
 COPY ./package.json ./

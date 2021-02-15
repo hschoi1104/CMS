@@ -41,9 +41,6 @@ services:
     container_name: mongo-auth
 
   backend-resource:
-    environment:
-      - accessKeyId = your_key
-      - secretAccessKey = your_key
     build:
       dockerfile: Dockerfile
       context: ./backend-resource
