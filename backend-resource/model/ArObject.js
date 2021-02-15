@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
-import autoIncrement from 'mongoose-auto-increment';
+import autoIncrementModelID from './Counter';
+
 const Schema = mongoose.Schema;
 const ArObject = new Schema({
   objectId: {
@@ -44,12 +45,13 @@ const ArObject = new Schema({
   },
 });
 
-autoIncrement.initialize(mongoose.connection);
-ArObject.plugin(autoIncrement.plugin, {
-  model: 'ArObject',
-  field: 'objectId',
-  startAt: 1,
-  increment: 1,
+ArObject.pre('save', function (next) {
+  if (!this.isNew) {
+    next();
+    return;
+  }
+
+  autoIncrementModelID('activities', this, next);
 });
 
 module.exports = mongoose.model('ArObject', ArObject);

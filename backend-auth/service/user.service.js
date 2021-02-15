@@ -2,15 +2,17 @@ import { UserDao } from './../dao/user.dao';
 import { RefreshTokenDao } from './../dao/refreshToken.dao';
 import { handleError } from './../model/Error';
 import { TokenResponse } from './../model/TokenResponse';
-import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 import { JWT } from './../util/jwt';
 export class UserService {
   //User
   static createUser = async (req) => {
     let { id, password, name } = req;
 
-    const salt = await bcrypt.genSalt(12);
-    password = await bcrypt.hash(password, salt);
+    const salt = await crypto.randomBytes(64).toString('base64');
+    password = crypto
+      .pbkdf2Sync(password, salt, 100000, 64, 'sha512')
+      .toString('base64');
 
     const existed = await UserDao.getUser(id);
 
@@ -86,9 +88,12 @@ export class UserService {
       throw new handleError(404, 'User not exsited');
     }
 
-    const compareResult = await bcrypt.compareSync(password, user.password);
+    const salt = user.salt;
+    const chkPassword = crypto
+      .pbkdf2Sync(password, salt, 100000, 64, 'sha512')
+      .toString('base64');
 
-    if (compareResult === false) {
+    if (chkPassword != user.password) {
       throw new handleError(401, 'Auth Error');
     }
 

@@ -5,7 +5,10 @@ import router from './../router';
 //import axiosResource from './axios.resource';
 
 const axiosAuth = axios.create({
-	baseURL: 'http://localhost:5000/api/v1/',
+	baseURL:
+		process.env.VUE_APP_NODE_ENV == 'dev'
+			? 'http://localhost:5000/api/v1'
+			: process.env.VUE_APP_AUTH_URL,
 	withCredentials: true,
 });
 
@@ -17,9 +20,8 @@ axiosAuth.interceptors.request.use(
 			config.headers.common = {
 				Authorization: 'Bearer ' + store.state.accessToken,
 			};
-		} catch (err) {
-			console.log();
-		}
+			// eslint-disable-next-line no-empty
+		} catch (err) {}
 		return await config;
 	},
 	function(error) {

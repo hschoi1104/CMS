@@ -633,7 +633,6 @@ export default {
 			this.dialog.update = false;
 		},
 		async createPost() {
-			console.log(this.post.file);
 			const formData = new FormData();
 			formData.append('name', this.post.name);
 			formData.append('modifiedManager', 'hschoi1104');
@@ -676,7 +675,7 @@ export default {
 					link.click();
 					URL.revokeObjectURL(link.href);
 				})
-				.catch(console.error);
+				.catch();
 		},
 		getImgUrl(post) {
 			if (post.s3Info !== undefined) return post.s3Info[0].location;
