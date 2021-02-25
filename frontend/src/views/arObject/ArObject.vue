@@ -309,7 +309,7 @@
 										v-for="file in post.s3Info"
 										:key="file.originalname"
 										class="ma-2"
-										@click.prevent="downloadItem(file.location, file.location)"
+										@click.prevent="downloadItem(file.bucket, file.key)"
 									>
 										{{ file.originalname }}
 									</v-chip>
@@ -664,18 +664,8 @@ export default {
 			if (option === 'update') this.dialog.update = true;
 			if (option === 'read') this.dialog.read = true;
 		},
-		downloadItem(url, label) {
-			this.$axiosResource
-				.get(url, { responseType: 'blob' })
-				.then(response => {
-					const blob = new Blob([response.data], { type: 'application/image' });
-					const link = document.createElement('a');
-					link.href = URL.createObjectURL(blob);
-					link.download = label;
-					link.click();
-					URL.revokeObjectURL(link.href);
-				})
-				.catch();
+		async downloadItem(bucket, key) {
+			await ArObjectService.downloadArObject(bucket, key);
 		},
 		getImgUrl(post) {
 			if (post.s3Info !== undefined) return post.s3Info[0].location;

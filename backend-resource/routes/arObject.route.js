@@ -4,6 +4,7 @@ import validate from '../validate/arObject.validate';
 import { ArObjectController } from '../controller/arObject.controller';
 import authMiddleware from '../middleware/auth.middleware';
 import upload from '../middleware/upload.middleware';
+import { download } from '../middleware/download.middleware';
 
 router.post(
   '/',
@@ -31,5 +32,7 @@ router.delete(
   validate.deleteArObject,
   ArObjectController.deleteArObject
 );
+
+router.get('/:bucket/:key', download);
 
 module.exports = router;
