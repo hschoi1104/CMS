@@ -1,5 +1,7 @@
+import { logger } from '../config/winston';
 import { ArObjectDao } from '../dao/arObject.dao';
 import { handleError } from '../model/Error';
+import s3 from './../util/s3';
 export class ArObjectService {
   static createArObject = async (req, s3Info) => {
     let { name, category, modifiedManager, content } = req;
@@ -67,5 +69,25 @@ export class ArObjectService {
     } else {
       throw new handleError(500, 'Delete error');
     }
+  };
+
+  static deleteFiles = async (params) => {
+    const { objectId } = params;
+    const result = await ArObjectDao.getArObject(objectId);
+    if (result == null || result.s3Info.length == 0) return result;
+
+    let param = {
+      Bucket: 'cms-s3',
+      Delete: {
+        Objects: [],
+      },
+    };
+    result.s3Info.forEach((element) => {
+      param.Delete.Objects.push({ Key: element.key });
+    });
+
+    s3.deleteObjects(param, function (err, data) {
+      if (!err) return data;
+    });
   };
 }

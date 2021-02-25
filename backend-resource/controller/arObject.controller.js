@@ -52,6 +52,8 @@ export class ArObjectController {
 
   static deleteArObject = async (req, res, next) => {
     try {
+      await ArObjectService.deleteFiles(req.params);
+
       const result = await ArObjectService.deleteArObject(req.params);
       return res
         .status(200)
