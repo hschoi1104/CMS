@@ -59,8 +59,9 @@ export class ArObjectService {
 		}
 	};
 
-	static downloadArObject = async (bucket, key) => {
+	static downloadArObject = async file => {
 		try {
+			const { bucket, key } = file;
 			await axiosResource({
 				url: `/arobject/${bucket}/${key}`,
 				method: 'GET',

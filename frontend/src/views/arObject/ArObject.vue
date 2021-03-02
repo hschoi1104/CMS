@@ -302,6 +302,9 @@
 							</v-row>
 							<v-row class="ma-2">
 								<span class="display-5">첨부파일</span>
+								<v-btn @click.prevent="downloadItems(post.s3Info)"
+									>전체 다운로드</v-btn
+								>
 							</v-row>
 							<v-row>
 								<v-col cols="12" sm="12">
@@ -309,7 +312,7 @@
 										v-for="file in post.s3Info"
 										:key="file.originalname"
 										class="ma-2"
-										@click.prevent="downloadItem(file.bucket, file.key)"
+										@click.prevent="downloadItems([...file])"
 									>
 										{{ file.originalname }}
 									</v-chip>
@@ -664,8 +667,10 @@ export default {
 			if (option === 'update') this.dialog.update = true;
 			if (option === 'read') this.dialog.read = true;
 		},
-		async downloadItem(bucket, key) {
-			await ArObjectService.downloadArObject(bucket, key);
+		async downloadItems(files) {
+			files.forEach(file => {
+				ArObjectService.downloadArObject(file);
+			});
 		},
 		getImgUrl(post) {
 			if (post.s3Info !== undefined) return post.s3Info[0].location;
