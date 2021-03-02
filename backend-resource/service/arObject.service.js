@@ -1,4 +1,3 @@
-import { logger } from '../config/winston';
 import { ArObjectDao } from '../dao/arObject.dao';
 import { handleError } from '../model/Error';
 import s3 from './../util/s3';
