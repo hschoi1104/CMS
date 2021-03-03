@@ -100,6 +100,7 @@
 											color="#426dad"
 											@click="register"
 											:disabled="invalid"
+											class="subtitle-1 white--text font-weight-bold"
 										>
 											회원가입
 										</v-btn>

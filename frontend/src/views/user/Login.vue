@@ -24,8 +24,8 @@
 						</v-card>
 						<v-card flat>
 							<v-toolbar flat>
-								<v-toolbar-title class="ma-9 display-1">
-									LOGIN
+								<v-toolbar-title class="ma-9 display-1 font-weight-bold">
+									로그인
 								</v-toolbar-title>
 							</v-toolbar>
 							<v-card-text>
@@ -33,7 +33,7 @@
 									filled
 									rounded
 									dense
-									label="ID"
+									label="아이디"
 									name="login"
 									prepend-icon="fas fa-user"
 									type="text"
@@ -46,7 +46,7 @@
 									rounded
 									dense
 									id="password"
-									label="PASSWORD"
+									label="비밀번호"
 									name="password"
 									prepend-icon="fas fa-lock"
 									type="password"
@@ -61,7 +61,7 @@
 									rounded
 									@click="$router.push('/signup')"
 									color="#426dad"
-									class="subtitle-1 white--text"
+									class="subtitle-1 white--text font-weight-bold"
 								>
 									회원가입
 								</v-btn>
@@ -69,7 +69,7 @@
 									@click="onLogin"
 									rounded
 									color="#426dad"
-									class="subtitle-1 white--text"
+									class="subtitle-1 white--text font-weight-bold"
 								>
 									로그인
 								</v-btn>
