@@ -1,5 +1,5 @@
 <template>
-	<v-container class="fill-height" fluid>
+	<!-- <v-container class="fill-height" fluid>
 		<v-row align="center" justify="center">
 			<v-col cols="12" sm="8" md="4">
 				<v-card class="elevation-12">
@@ -42,6 +42,94 @@
 							로그인
 						</v-btn>
 					</v-card-actions>
+				</v-card>
+			</v-col>
+		</v-row>
+	</v-container> -->
+	<v-container class="fill-height" fluid>
+		<v-row class="fill-height">
+			<v-col cols="12" md="7" class="d-flex ma-0 pa-0 fill-screen">
+				<v-row align="center" justify="center">
+					<v-col cols="12" sm="6" md="7">
+						<v-card flat>
+							<v-row>
+								<v-col>
+									<v-img
+										icon
+										left
+										src="./../../assets/ccms_logo.png"
+										height="350px"
+										width="350px"
+									></v-img>
+								</v-col>
+								<v-col class="d-flex align-center">
+									<v-card-text align="center" class=" display-1 text--disabled"
+										>Cloud Contents Management System</v-card-text
+									>
+								</v-col>
+							</v-row>
+						</v-card>
+						<v-card flat>
+							<v-toolbar flat>
+								<v-toolbar-title class="ma-9 display-1">
+									LOGIN
+								</v-toolbar-title>
+							</v-toolbar>
+							<v-card-text>
+								<v-text-field
+									filled
+									rounded
+									dense
+									label="ID"
+									name="login"
+									prepend-icon="fas fa-user"
+									type="text"
+									v-model="user.id"
+									:error="!!errorMsg"
+								/>
+
+								<v-text-field
+									filled
+									rounded
+									dense
+									id="password"
+									label="PASSWORD"
+									name="password"
+									prepend-icon="fas fa-lock"
+									type="password"
+									v-model="user.password"
+									:error="!!errorMsg"
+									:error-messages="errorMsg"
+								/>
+							</v-card-text>
+							<v-card-actions>
+								<v-spacer />
+								<v-btn
+									rounded
+									@click="$router.push('/signup')"
+									color="#426dad"
+									class="subtitle-1 white--text"
+								>
+									회원가입
+								</v-btn>
+								<v-btn
+									@click="onLogin"
+									rounded
+									color="#426dad"
+									class="subtitle-1 white--text"
+								>
+									로그인
+								</v-btn>
+							</v-card-actions>
+						</v-card>
+					</v-col>
+				</v-row>
+			</v-col>
+			<v-col cols="5" md="5" class="ma-0 pa-0 fill-height">
+				<v-card class="d-flex align-end" color="#426dad" tile minHeight="100%">
+					<span class="pa-2 white--text title font-weight-bold"
+						>CCMS | Cloud Contents Management System</span
+					>
 				</v-card>
 			</v-col>
 		</v-row>
