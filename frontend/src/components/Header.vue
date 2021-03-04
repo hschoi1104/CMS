@@ -3,9 +3,18 @@
 		<v-container>
 			<v-app-bar class="transparent" height="100" absolute>
 				<v-card flat class="transparent" @click="$router.push('/')">
-					<v-card-text class="#BDBDBD-text display-3 font-weight-black"
-						>CCMS</v-card-text
-					>
+					<v-row align="center" justify="center">
+						<v-col cols="12">
+							<v-img
+								icon
+								right
+								height="100px"
+								width="100px"
+								src="./../assets/ccms_logo.png"
+							>
+							</v-img>
+						</v-col>
+					</v-row>
 				</v-card>
 				<v-spacer></v-spacer>
 
