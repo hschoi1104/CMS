@@ -11,7 +11,7 @@ export class ShortUrlService {
         return new handleError(404, 'object not exsited');
       }
 
-      objectId = exsitedArobject._id;
+      objectId = exsitedArobject.objectId;
       let exsitedKey = await ShortUrlDao.getShortUrl(key);
       while (exsitedKey.length != 0) {
         key = Math.random().toString(36).substr(2, 11);
