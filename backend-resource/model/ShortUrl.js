@@ -7,7 +7,7 @@ const ShortUrl = new Schema({
     required: true,
     trim: true,
   },
-  objectId: { type: Schema.Types.ObjectId, ref: 'ArObject' },
+  objectId: { type: Number },
   created: { type: Date, default: Date.now },
 });
 
