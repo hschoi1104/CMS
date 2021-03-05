@@ -34,6 +34,12 @@ const routes = [
 		name: 'arobject',
 		component: () => import('../views/arObject/ArObject.vue'),
 	},
+	{
+		path: '/files/:key',
+		name: 'download',
+		component: () => import('../views/arObject/Download.vue'),
+		meta: { unauthorized: true },
+	},
 ];
 
 const router = new VueRouter({

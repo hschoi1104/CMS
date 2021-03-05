@@ -3,7 +3,7 @@ import { handleError } from '../model/Error';
 import { logger } from '../config/winston';
 
 exports.createObjectLog = [
-  check('objectId').isString().isLength({ min: 3 }),
+  check('objectId').isNumeric(),
 
   (req, res, next) => {
     const errors = validationResult(req);
