@@ -26,4 +26,21 @@ export class ObjectLogDao {
       created: 1,
     });
   };
+  static getObjectLogs = async (start, end) => {
+    return ObjectLog.find(
+      {
+        created: {
+          $gte: start,
+          $lt: end,
+        },
+      },
+      {
+        __v: 0,
+        _id: 0,
+        objectId: 0,
+      }
+    ).sort({
+      created: 1,
+    });
+  };
 }
