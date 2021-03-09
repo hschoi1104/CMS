@@ -42,11 +42,6 @@
 							>오브젝트 관리</v-card-text
 						>
 					</v-card>
-					<v-card v-if="loginCheck" flat @click="Push('/arobject')">
-						<v-card-text class="#BDBDBD-text headline font-weight-medium"
-							>서비스 사용량</v-card-text
-						>
-					</v-card>
 					<v-card v-if="!loginCheck" flat @click="Push('/signup')">
 						<v-card-text class="#BDBDBD-text headline font-weight-medium"
 							>회원가입</v-card-text

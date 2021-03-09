@@ -282,54 +282,66 @@
 										</template>
 									</v-img>
 								</v-col>
-								<v-col cols="7">
+								<v-col cols="7" class="pa-10">
 									<v-row>
-										<v-col cols="3">
-											<v-card-text>작성자</v-card-text>
-										</v-col>
-										<v-col cols="9">
-											<v-card-text>{{ post.modifiedManager }}</v-card-text>
-										</v-col>
+										<v-text-field
+											filled
+											rounded
+											dense
+											v-model="post.modifiedManager"
+											readonly
+											label="작성자"
+										></v-text-field>
 									</v-row>
 									<v-row>
-										<v-col cols="3">
-											<v-card-text>생성일</v-card-text>
-										</v-col>
-										<v-col cols="9">
-											<v-card-text>{{ post.created }}</v-card-text>
-										</v-col>
+										<v-text-field
+											filled
+											rounded
+											dense
+											v-model="post.created"
+											readonly
+											label="생성일"
+										></v-text-field>
 									</v-row>
 									<v-row>
-										<v-col cols="3">
-											<v-card-text>수정일</v-card-text>
-										</v-col>
-										<v-col cols="9">
-											<v-card-text>{{ post.modified }}</v-card-text>
-										</v-col>
+										<v-text-field
+											filled
+											rounded
+											dense
+											v-model="post.modified"
+											label="수정일"
+											readonly
+										></v-text-field>
 									</v-row>
 									<v-row>
-										<v-col cols="3">
-											<v-card-text>카테고리</v-card-text>
-										</v-col>
-										<v-col cols="9">
-											<v-card-text>{{ post.category }}</v-card-text>
-										</v-col>
+										<v-text-field
+											filled
+											rounded
+											dense
+											v-model="post.category"
+											readonly
+											label="카테고리"
+										></v-text-field>
 									</v-row>
 									<v-row>
-										<v-col cols="3">
-											<v-card-text>다운로드 수</v-card-text>
-										</v-col>
-										<v-col cols="9">
-											<v-card-text>{{ post.downloadCount }}</v-card-text>
-										</v-col>
+										<v-text-field
+											filled
+											rounded
+											dense
+											v-model="post.downloadCount"
+											readonly
+											label="다운로드 수"
+										></v-text-field>
 									</v-row>
 									<v-row>
-										<v-col cols="3">
-											<v-card-text>내용</v-card-text>
-										</v-col>
-										<v-col cols="9">
-											<v-card-text>{{ post.content }}</v-card-text>
-										</v-col>
+										<v-textarea
+											filled
+											rounded
+											dense
+											v-model="post.content"
+											readonly
+											label="내용"
+										></v-textarea>
 									</v-row>
 								</v-col>
 							</v-row>
@@ -337,10 +349,11 @@
 								<span class="display-5">다운로드 링크</span>
 								<v-spacer></v-spacer>
 								<v-btn
+									v-if="shortUrl.key == ''"
 									rounded
 									color="#426dad"
 									class="subtitle-1 white--text "
-									@click.prevent="downloadItems(post.s3Info)"
+									@click.prevent="createShortUrl(post.objectId)"
 									><v-card-text>링크 발급하기</v-card-text></v-btn
 								>
 							</v-row>
@@ -403,13 +416,13 @@
 			<v-dialog v-model="dialog.update" persistent max-width="60%">
 				<v-card>
 					<v-card-title>
-						<span class="display-1">AR Object 수정</span>
+						<span class="display-1 pa-7">AR Object 수정</span>
 					</v-card-title>
 					<v-divider></v-divider>
-					<v-card-text>
+					<v-card-text class="ma-3">
 						<v-container>
 							<v-row class="ma-1">
-								<v-col cols="4">
+								<v-col cols="5">
 									<v-img
 										v-if="getImgUrl(post) === ''"
 										justify="center"
@@ -455,21 +468,31 @@
 										</template>
 									</v-img>
 								</v-col>
-								<v-col cols="8">
+								<v-col cols="7" class="pa-10">
 									<v-row>
 										<v-text-field
+											filled
+											rounded
+											dense
 											v-model="post.name"
 											label="오브젝트명"
 										></v-text-field>
 									</v-row>
 									<v-row>
 										<v-combobox
+											filled
+											rounded
+											dense
 											v-model="post.category"
+											label="카테고리"
 											:items="categorys"
 										></v-combobox>
 									</v-row>
 									<v-row>
 										<v-textarea
+											filled
+											rounded
+											dense
 											v-model="post.content"
 											name="content"
 											label="내용"
@@ -477,28 +500,41 @@
 									</v-row>
 								</v-col>
 							</v-row>
-							<v-row class="ma-2">
+							<v-row class="ma-3">
 								<span class="display-5">첨부파일</span>
+								<v-spacer></v-spacer>
+								<span class="error-text">첨부파일은 수정이 불가능 합니다.</span>
 							</v-row>
 							<v-row>
 								<v-col cols="12" sm="12">
 									<v-chip
-										v-model="post.url"
+										v-for="file in post.s3Info"
+										:key="file.originalname"
 										class="ma-2"
-										filter
-										filter-icon="mdi-minus"
+										@click.prevent="downloadItems([...file])"
 									>
+										{{ file.originalname }}
 									</v-chip>
 								</v-col>
 							</v-row>
 						</v-container>
 					</v-card-text>
-					<v-card-actions>
+					<v-card-actions class="pa-10">
 						<v-spacer></v-spacer>
-						<v-btn color="blue darken-1" text @click="updatePost(post)">
+						<v-btn
+							rounded
+							color="#426dad"
+							class="subtitle-1 white--text font-weight-bold"
+							@click="updatePost(post)"
+						>
 							수정
 						</v-btn>
-						<v-btn color="blue darken-1" text @click="closeDialog()">
+						<v-btn
+							rounded
+							color="#426dad"
+							class="subtitle-1 white--text font-weight-bold"
+							@click="closeDialog()"
+						>
 							취소
 						</v-btn>
 					</v-card-actions>
@@ -510,38 +546,39 @@
 				<v-form>
 					<v-card>
 						<v-card-title>
-							<span class="display-1">AR Object 업로드</span>
+							<span class="display-1 pa-7">AR Object 업로드</span>
 						</v-card-title>
 						<v-divider></v-divider>
-						<v-card-text>
-							<v-container>
-								<v-row class="ma-1">
-									<v-col cols="4">
-										<v-img
-											justify="center"
-											align="center"
-											src="@/assets/object.png"
-											aspect-ratio="1"
-											max-height="100%"
-										>
-										</v-img>
-									</v-col>
-									<v-col cols="8">
+						<v-card-text class="ma-3">
+							<v-container class="pa-10">
+								<v-row>
+									<v-col cols="12">
 										<v-row>
 											<v-text-field
+												filled
+												rounded
+												dense
 												v-model="post.name"
 												label="오브젝트명"
 											></v-text-field>
 										</v-row>
 										<v-row>
 											<v-combobox
+												filled
+												rounded
+												dense
 												v-model="post.category"
 												:items="categorys"
+												:hint="'새로운 카테고리는 타이핑 하세요'"
+												:persistent-hint="ture"
 												label="카테고리"
 											></v-combobox>
 										</v-row>
 										<v-row>
 											<v-textarea
+												filled
+												rounded
+												dense
 												v-model="post.content"
 												name="content"
 												label="내용"
@@ -549,7 +586,7 @@
 										</v-row>
 									</v-col>
 								</v-row>
-								<v-row class="ma-2">
+								<v-row>
 									<span class="display-5">첨부파일</span>
 								</v-row>
 								<v-row>
@@ -587,6 +624,7 @@
 import moment from 'moment';
 
 import { ArObjectService } from './../../service/arObject.service';
+import { ShortUrlService } from './../../service/shortUrl.service';
 
 export default {
 	data() {
@@ -606,6 +644,11 @@ export default {
 				update: false,
 			},
 			post: [{ s3Info: '' }],
+			shortUrl: {
+				key: '',
+				link: '',
+				api: '',
+			},
 		};
 	},
 	async created() {
@@ -695,6 +738,9 @@ export default {
 		getImgUrl(post) {
 			if (post.s3Info !== undefined) return post.s3Info[0].location;
 			else return '';
+		},
+		async createShortUrl(objectId) {
+			await ShortUrlService.createShortUrl(objectId);
 		},
 	},
 };
