@@ -19,11 +19,7 @@
 				<v-spacer></v-spacer>
 
 				<v-row class="justify-end">
-					<v-card
-						v-if="loginCheck"
-						flat
-						@click="$router.push('/user/manage/auth')"
-					>
+					<v-card v-if="loginCheck" flat @click="$router.push('/dashboard')">
 						<v-card-text class="#BDBDBD-text headline font-weight-medium"
 							>대시보드</v-card-text
 						>

@@ -15,6 +15,7 @@ export class ObjectLogService {
 
   static getObjectLog = async (req) => {
     const { start, end } = req.query;
+    logger.info(start, end);
     const { objectId } = req.params;
     const logs = await ObjectLogDao.getObjectLog(
       objectId,

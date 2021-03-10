@@ -2,7 +2,7 @@
 	<v-container class="fill-height" fluid>
 		<v-row class="fill-height">
 			<v-col cols="4" md="4" class="ma-0 pa-0 fill-height">
-				<v-card class="mt-3" tile minHeight="100%">
+				<v-card class="mt-3" elevation="0" minHeight="100%">
 					<v-row>
 						<v-col cols="12">
 							<v-card-text class="ma-15 display-1 font-weight-bold"
@@ -28,7 +28,7 @@
 											:key="user.id"
 											cols="12"
 											sm="12"
-											md="12"
+											md="6"
 											lg="6"
 										>
 											<v-card class="ma-5 pa-4">

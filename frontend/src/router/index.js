@@ -40,6 +40,11 @@ const routes = [
 		component: () => import('../views/arObject/Download.vue'),
 		meta: { unauthorized: true },
 	},
+	{
+		path: '/dashboard',
+		name: 'dashboard',
+		component: () => import('../views/DashBoard.vue'),
+	},
 ];
 
 const router = new VueRouter({
