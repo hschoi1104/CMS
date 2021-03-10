@@ -12,6 +12,11 @@ router.post(
 );
 router.get('/', authMiddleware(), ShortUrlController.getShortUrls);
 router.get(
+  '/key/:objectId',
+  authMiddleware(),
+  ShortUrlController.getShortUrlKey
+);
+router.get(
   '/:key',
   authMiddleware(),
   validate.getShortUrl,

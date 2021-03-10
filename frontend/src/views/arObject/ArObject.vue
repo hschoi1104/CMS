@@ -323,16 +323,7 @@
 											label="카테고리"
 										></v-text-field>
 									</v-row>
-									<v-row>
-										<v-text-field
-											filled
-											rounded
-											dense
-											v-model="post.downloadCount"
-											readonly
-											label="다운로드 수"
-										></v-text-field>
-									</v-row>
+
 									<v-row>
 										<v-textarea
 											filled

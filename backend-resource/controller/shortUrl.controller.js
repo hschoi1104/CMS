@@ -12,6 +12,18 @@ export class ShortUrlController {
     }
   };
 
+  static getShortUrlKey = async (req, res, next) => {
+    try {
+      const result = await ShortUrlService.getShortUrlKey(req.params);
+
+      return res
+        .status(200)
+        .json(new Response(200, 'success', 'find ShortUrl success', result));
+    } catch (err) {
+      next(err);
+    }
+  };
+
   static getShortUrl = async (req, res, next) => {
     try {
       const result = await ShortUrlService.getShortUrl(req.params);
