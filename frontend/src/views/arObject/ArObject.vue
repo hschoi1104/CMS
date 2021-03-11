@@ -337,10 +337,17 @@
 								</v-col>
 							</v-row>
 							<v-row class="ma-3">
-								<span class="display-5">다운로드 링크</span>
-								<v-spacer></v-spacer>
+								<v-text-field
+									filled
+									rounded
+									dense
+									v-model="post.key"
+									readonly
+									label="다운로드 링크"
+								>
+								</v-text-field>
 								<v-btn
-									v-if="shortUrl.key == ''"
+									v-if="post.key == ''"
 									rounded
 									color="#426dad"
 									class="subtitle-1 white--text "
@@ -561,7 +568,7 @@
 												v-model="post.category"
 												:items="categorys"
 												:hint="'새로운 카테고리는 타이핑 하세요'"
-												:persistent-hint="ture"
+												:persistent-hint="true"
 												label="카테고리"
 											></v-combobox>
 										</v-row>
@@ -674,6 +681,7 @@ export default {
 			this.categorys.push('전체 카테고리');
 		},
 		async readPost(objectId) {
+			this.dialog.read = false;
 			this.post = await ArObjectService.readArObject(objectId);
 			this.post.created = moment(this.post.created).format(
 				'YY년 MM월 DD일 HH:MM:SS',
@@ -681,6 +689,16 @@ export default {
 			this.post.modified = moment(this.post.modified).format(
 				'YY년 MM월 DD일 HH:MM:SS',
 			);
+
+			this.post.key = await ShortUrlService.getShortUrlKey(objectId);
+
+			if (process.env.NODE_ENV === 'development') {
+				if (this.post.key === 'false') this.post.key = '';
+				else this.post.key = 'http://localhost:8080/files/' + this.post.key;
+			} else {
+				if (this.post.key === 'false') this.post.key = '';
+				else this.post.key = process.env.VUE_APP_DOWNLINK + this.post.key;
+			}
 			this.dialog.read = true;
 		},
 		closeDialog() {
@@ -688,6 +706,8 @@ export default {
 			this.dialog.read = false;
 			this.dialog.create = false;
 			this.dialog.update = false;
+			this.shortUrl.key = '';
+			this.shortUrl.url = '';
 		},
 		async createPost() {
 			const formData = new FormData();
@@ -713,13 +733,16 @@ export default {
 			this.closeDialog();
 			await this.fetch();
 		},
-		openDialog(option) {
+		async openDialog(option) {
 			this.dialog.create = false;
 			this.dialog.read = false;
 			this.dialog.update = false;
 			if (option === 'create') this.dialog.create = true;
 			if (option === 'update') this.dialog.update = true;
-			if (option === 'read') this.dialog.read = true;
+			if (option === 'read') {
+				this.dialog.read = true;
+				await this.getShortUrl();
+			}
 		},
 		async downloadItems(files) {
 			files.forEach(file => {
@@ -732,6 +755,7 @@ export default {
 		},
 		async createShortUrl(objectId) {
 			await ShortUrlService.createShortUrl(objectId);
+			await this.readPost(objectId);
 		},
 	},
 };

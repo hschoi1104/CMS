@@ -23,10 +23,10 @@ export class ShortUrlService {
 
 	static getShortUrlKey = async objectId => {
 		try {
-			const result = await axiosResource.get(`/short/${objectId}/key`);
-			return result.data.result;
+			const result = await axiosResource.get(`/short/key/${objectId}`);
+			return result.data.result[0].key;
 		} catch (err) {
-			return err;
+			return 'false';
 		}
 	};
 }
