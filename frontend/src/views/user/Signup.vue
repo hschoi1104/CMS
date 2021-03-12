@@ -115,7 +115,7 @@
 						</v-card>
 					</v-col>
 				</v-row>
-				<div class="bg_bottomleft"></div>
+				<div class="bg"></div>
 			</v-col>
 			<v-col cols="5" md="5" class="ma-0 pa-0 fill-height">
 				<v-card class="d-flex align-end" color="#426dad" tile minHeight="100%">
@@ -206,7 +206,7 @@ export default {
 };
 </script>
 <style>
-.bg_bottomleft {
+.bg {
 	background-image: url('../../assets/auth_background.png');
 	position: fixed;
 	bottom: 0px;
