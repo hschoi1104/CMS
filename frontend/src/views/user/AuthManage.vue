@@ -2,10 +2,15 @@
 	<v-container class="fill-height" fluid>
 		<v-row class="fill-height">
 			<v-col cols="4" md="4" class="ma-0 pa-0 fill-height">
-				<v-card class="mt-3" elevation="0" minHeight="100%">
+				<v-card
+					class="mt-3 transparent bg"
+					style="bg"
+					elevation="0"
+					minHeight="100%"
+				>
 					<v-row>
 						<v-col cols="12">
-							<v-card-text class="ma-15 display-1 font-weight-bold"
+							<v-card-text class="ml-15 mt-15 display-1 font-weight-bold"
 								>| 권한관리</v-card-text
 							>
 						</v-col>
@@ -118,3 +123,13 @@ export default {
 	},
 };
 </script>
+<style>
+.bg {
+	background-image: url('../../assets/auth_background.png');
+	position: relative;
+	width: 100%;
+	height: 100%;
+	background-position: left bottom;
+	background-size: contain;
+}
+</style>

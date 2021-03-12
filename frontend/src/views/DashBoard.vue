@@ -2,7 +2,7 @@
 	<v-container class="fill-height" fluid>
 		<v-row class="fill-height">
 			<v-col cols="4" md="4" class="ma-0 pa-0 fill-height">
-				<v-card class="pa-10 fill-height" tile>
+				<v-card class="pa-10 fill-height bg" tile style="bg">
 					<v-row>
 						<v-card-text class="ma-3 display-1 font-weight-bold">
 							| 서비스 사용량
@@ -351,3 +351,13 @@ export default {
 	},
 };
 </script>
+<style>
+.bg {
+	background-image: url('../assets/auth_background.png');
+	position: relative;
+	width: 100%;
+	height: 100%;
+	background-position: left bottom;
+	background-size: contain;
+}
+</style>

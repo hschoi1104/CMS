@@ -1,7 +1,7 @@
 <template>
 	<v-container class="fill-height" fluid>
-		<v-row align="center" justify="center">
-			<v-card flat>
+		<v-row justify="center">
+			<v-card flat class="transparent" style="z-index:2;">
 				<v-row>
 					<v-col cols="5" sm="12" md="5">
 						<v-img
@@ -31,6 +31,8 @@
 				</v-row>
 			</v-card>
 		</v-row>
+		<div class="bg_bottomleft"></div>
+		<div class="bg_topright"></div>
 	</v-container>
 </template>
 
@@ -44,3 +46,26 @@ export default {
 	},
 };
 </script>
+<style>
+.bg_bottomleft {
+	background-image: url('../assets/auth_background.png');
+	position: fixed;
+	bottom: 0px;
+	left: 0px;
+	width: 60%;
+	height: 60%;
+	background-size: contain;
+	z-index: 1;
+}
+.bg_topright {
+	background-image: url('../assets/auth_background.png');
+	position: fixed;
+	top: 0px;
+	right: 0px;
+	width: 60%;
+	height: 60%;
+	background-size: contain;
+	z-index: 1;
+	transform: rotate(180deg);
+}
+</style>
