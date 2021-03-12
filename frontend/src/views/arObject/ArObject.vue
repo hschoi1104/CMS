@@ -1,190 +1,239 @@
 <template>
-	<v-container fluid>
-		<template>
-			<v-container fluid>
-				<v-data-iterator
-					:items="filteredItems"
-					:items-per-page.sync="itemsPerPage"
-					:page.sync="page"
-					:search="search"
-					:sort-by="sortBy.toLowerCase()"
-					hide-default-footer
-				>
-					<template v-slot:header>
-						<v-toolbar dark color="blue darken-3" class="mb-1">
-							<v-text-field
-								v-model="search"
-								clearable
-								flat
-								solo-inverted
-								hide-details
-								prepend-inner-icon="mdi-magnify"
-								label="Search"
-							></v-text-field>
-							<template v-if="$vuetify.breakpoint.mdAndUp">
-								<v-spacer></v-spacer>
-								<v-select
-									v-model="sortBy"
-									flat
-									solo-inverted
-									hide-details
-									:items="categorys"
-									prepend-inner-icon="mdi-magnify"
-									label="Sort by"
-								></v-select>
-							</template>
-							<template v-if="$vuetify.breakpoint.mdAndUp">
-								<v-spacer></v-spacer>
-								<v-btn @click="openDialog('create')" color="primary">
-									오브젝트 업로드
-								</v-btn>
-							</template>
-						</v-toolbar>
-					</template>
-
-					<template v-slot:default="props">
-						<v-row>
-							<v-col
-								v-for="item in props.items"
-								:key="item.name"
-								cols="12"
-								sm="6"
-								md="4"
-								lg="3"
+	<v-container class="fill-height" fluid>
+		<v-row class="fill-height">
+			<v-col cols="12" md="12" class="ma-0 pa-0 fill-height">
+				<v-card tile minHeight="100%" color="#E0E0E0">
+					<template>
+						<v-container align="center">
+							<v-data-iterator
+								:items="filteredItems"
+								:items-per-page.sync="itemsPerPage"
+								:page.sync="page"
+								:search="search"
+								:sort-by="sortBy.toUpperCase()"
+								hide-default-footer
 							>
-								<v-card class="ma-3 pa-2" @click="readPost(item.objectId)">
+								<template v-slot:header>
+									<v-toolbar color="white" class="mb-1">
+										<v-text-field
+											v-model="search"
+											clearable
+											flat
+											solo-inverted
+											hide-details
+											prepend-inner-icon="mdi-magnify"
+											label="Search"
+										></v-text-field>
+										<template v-if="$vuetify.breakpoint.mdAndUp">
+											<v-spacer></v-spacer>
+											<v-select
+												v-model="sortBy"
+												flat
+												solo-inverted
+												hide-details
+												:items="categorys"
+												prepend-inner-icon="mdi-magnify"
+												label="Sort by"
+											></v-select>
+										</template>
+										<template v-if="$vuetify.breakpoint.mdAndUp">
+											<v-spacer></v-spacer>
+											<v-btn
+												rounded
+												dark
+												color="#426dad"
+												@click="openDialog('create')"
+											>
+												오브젝트 업로드
+											</v-btn>
+										</template>
+									</v-toolbar>
+								</template>
+
+								<template v-slot:default="props">
 									<v-row>
-										<v-col cols="5">
-											<v-img
-												v-if="item.s3Info === ''"
-												justify="center"
-												align="center"
-												:src="
-													`https://user-images.githubusercontent.com/43382559/105813660-864fcb00-5ff3-11eb-8e3b-27291e8b3030.png`
-												"
-												aspect-ratio="1"
-												class="grey lighten-2"
-												max-height="100%"
-												max-width="100%"
+										<v-col
+											v-for="item in props.items"
+											:key="item.name"
+											cols="12"
+											sm="6"
+											md="6"
+											lg="4"
+										>
+											<v-card
+												class="ma-3 pa-2"
+												@click="readPost(item.objectId)"
 											>
-												<template v-slot:placeholder>
-													<v-row
-														class="fill-height ma-0"
-														align="center"
-														justify="center"
-													>
-														<v-progress-circular
-															indeterminate
-															color="grey lighten-5"
-														></v-progress-circular>
-													</v-row>
-												</template>
-											</v-img>
-											<v-img
-												v-if="item.s3Info !== ''"
-												justify="center"
-												align="center"
-												:src="getImgUrl(item)"
-												aspect-ratio="1"
-												class="grey lighten-2"
-												max-height="100%"
-												max-width="100%"
-											>
-												<template v-slot:placeholder>
-													<v-row
-														class="fill-height ma-0"
-														align="center"
-														justify="center"
-													>
-														<v-progress-circular
-															indeterminate
-															color="grey lighten-5"
-														></v-progress-circular>
-													</v-row>
-												</template>
-											</v-img>
-										</v-col>
-										<v-col cols="7">
-											<v-card-title>
-												#{{ item.objectId }} {{ item.name }}
-											</v-card-title>
-											<v-card-text>
-												{{ item.content }}
-											</v-card-text>
+												<v-row>
+													<v-col cols="5">
+														<v-img
+															v-if="item.s3Info === ''"
+															justify="center"
+															align="center"
+															src="@/assets/object.png"
+															aspect-ratio="1"
+															class="grey lighten-2"
+															max-height="100%"
+															max-width="100%"
+														>
+															<template v-slot:placeholder>
+																<v-row
+																	class="fill-height ma-0"
+																	align="center"
+																	justify="center"
+																>
+																	<v-progress-circular
+																		indeterminate
+																		color="grey lighten-5"
+																	></v-progress-circular>
+																</v-row>
+															</template>
+														</v-img>
+														<v-img
+															v-if="item.s3Info !== ''"
+															justify="center"
+															align="center"
+															:src="getImgUrl(item)"
+															aspect-ratio="1"
+															class="grey lighten-2"
+															max-height="100%"
+															max-width="100%"
+														>
+															<template v-slot:placeholder>
+																<v-row
+																	class="fill-height ma-0"
+																	align="center"
+																	justify="center"
+																>
+																	<v-progress-circular
+																		indeterminate
+																		color="grey lighten-5"
+																	></v-progress-circular>
+																</v-row>
+															</template>
+														</v-img>
+													</v-col>
+													<v-col cols="7">
+														<v-card-title>
+															No.{{ item.objectId }} {{ item.name }}
+														</v-card-title>
+														<v-card-subtitle>
+															{{ item.content }}
+														</v-card-subtitle>
+														<v-row class="caption ml-1">
+															<v-col cols="3">
+																카테고리
+															</v-col>
+															<v-col cols="9">
+																{{ item.category }}
+															</v-col>
+														</v-row>
+														<v-row class="caption  ml-1">
+															<v-col cols="3">
+																첨부파일
+															</v-col>
+															<v-col cols="9">
+																<v-chip
+																	v-for="file in item.s3Info"
+																	:key="file.originalname"
+																	class="ma-2"
+																	x-small
+																>
+																	<div v-if="file.originalname.length < 10">
+																		{{ file.originalname }}
+																	</div>
+																	<div v-else>
+																		{{
+																			file.originalname.substring(0, 4) +
+																				'..' +
+																				file.originalname.substring(
+																					file.originalname.length - 4,
+																					file.originalname.length,
+																				)
+																		}}
+																	</div>
+																</v-chip>
+															</v-col>
+														</v-row>
+													</v-col>
+												</v-row>
+											</v-card>
 										</v-col>
 									</v-row>
-								</v-card>
-							</v-col>
-						</v-row>
-					</template>
-
-					<template v-slot:footer>
-						<v-row class="mt-2" align="center" justify="center">
-							<span class="grey--text">Items per page</span>
-							<v-menu offset-y>
-								<template v-slot:activator="{ on, attrs }">
-									<v-btn
-										dark
-										text
-										color="primary"
-										class="ml-2"
-										v-bind="attrs"
-										v-on="on"
-									>
-										{{ itemsPerPage }}
-										<v-icon>mdi-chevron-down</v-icon>
-									</v-btn>
 								</template>
-								<v-list>
-									<v-list-item
-										v-for="(number, index) in itemsPerPageArray"
-										:key="index"
-										@click="updateItemsPerPage(number)"
-									>
-										<v-list-item-title>{{ number }}</v-list-item-title>
-									</v-list-item>
-								</v-list>
-							</v-menu>
 
-							<v-spacer></v-spacer>
+								<template v-slot:footer>
+									<v-row class="mt-2" align="center" justify="center">
+										<span class="grey--text">Items per page</span>
+										<v-menu offset-y>
+											<template v-slot:activator="{ on, attrs }">
+												<v-btn
+													dark
+													text
+													color="primary"
+													class="ml-2"
+													v-bind="attrs"
+													v-on="on"
+												>
+													{{ itemsPerPage }}
+													<v-icon>mdi-chevron-down</v-icon>
+												</v-btn>
+											</template>
+											<v-list>
+												<v-list-item
+													v-for="(number, index) in itemsPerPageArray"
+													:key="index"
+													@click="updateItemsPerPage(number)"
+												>
+													<v-list-item-title>{{ number }}</v-list-item-title>
+												</v-list-item>
+											</v-list>
+										</v-menu>
 
-							<span
-								class="mr-4
+										<v-spacer></v-spacer>
+
+										<span
+											class="mr-4
             grey--text"
-							>
-								Page {{ page }} of {{ numberOfPages }}
-							</span>
-							<v-btn
-								fab
-								dark
-								color="blue darken-3"
-								class="mr-1"
-								@click="formerPage"
-							>
-								<v-icon>mdi-chevron-left</v-icon>
-							</v-btn>
-							<v-btn
-								fab
-								dark
-								color="blue darken-3"
-								class="ml-1"
-								@click="nextPage"
-							>
-								<v-icon>mdi-chevron-right</v-icon>
-							</v-btn>
-						</v-row>
+										>
+											Page {{ page }} of {{ numberOfPages }}
+										</span>
+										<v-btn
+											fab
+											dark
+											color="blue darken-3"
+											class="mr-1"
+											@click="formerPage"
+										>
+											<v-icon>mdi-chevron-left</v-icon>
+										</v-btn>
+										<v-btn
+											fab
+											dark
+											color="blue darken-3"
+											class="ml-1"
+											@click="nextPage"
+										>
+											<v-icon>mdi-chevron-right</v-icon>
+										</v-btn>
+									</v-row>
+								</template>
+							</v-data-iterator>
+						</v-container>
 					</template>
-				</v-data-iterator>
-			</v-container>
-		</template>
+				</v-card>
+			</v-col>
+		</v-row>
 		<template>
 			<v-dialog v-model="dialog.read" persistent max-width="60%">
 				<v-card>
 					<v-card-title>
-						<span class="display-1">#{{ post.objectId }} {{ post.name }}</span>
+						<span class="display-1 pa-7"
+							>#{{ post.objectId }} {{ post.name }}</span
+						>
 					</v-card-title>
 					<v-divider></v-divider>
-					<v-card-text>
+					<v-card-text class="ma-3">
 						<v-container>
 							<v-row class="ma-1">
 								<v-col cols="5">
@@ -192,9 +241,7 @@
 										v-if="getImgUrl(post) === ''"
 										justify="center"
 										align="center"
-										:src="
-											`https://user-images.githubusercontent.com/43382559/105813660-864fcb00-5ff3-11eb-8e3b-27291e8b3030.png`
-										"
+										src="@/assets/object.png"
 										aspect-ratio="1"
 										class="grey lighten-2"
 										max-height="100%"
@@ -235,75 +282,107 @@
 										</template>
 									</v-img>
 								</v-col>
-								<v-col cols="7">
+								<v-col cols="7" class="pa-10">
 									<v-row>
-										<v-col cols="4">
-											<v-card-text>작성자</v-card-text>
-										</v-col>
-										<v-col cols="8">
-											<v-card-text>{{ post.modifiedManager }}</v-card-text>
-										</v-col>
+										<v-text-field
+											filled
+											rounded
+											dense
+											v-model="post.modifiedManager"
+											readonly
+											label="작성자"
+										></v-text-field>
 									</v-row>
 									<v-row>
-										<v-col cols="4">
-											<v-card-text>생성일</v-card-text>
-										</v-col>
-										<v-col cols="8">
-											<v-card-text>{{ post.created }}</v-card-text>
-										</v-col>
+										<v-text-field
+											filled
+											rounded
+											dense
+											v-model="post.created"
+											readonly
+											label="생성일"
+										></v-text-field>
 									</v-row>
 									<v-row>
-										<v-col cols="4">
-											<v-card-text>수정일</v-card-text>
-										</v-col>
-										<v-col cols="8">
-											<v-card-text>{{ post.modified }}</v-card-text>
-										</v-col>
+										<v-text-field
+											filled
+											rounded
+											dense
+											v-model="post.modified"
+											label="수정일"
+											readonly
+										></v-text-field>
 									</v-row>
 									<v-row>
-										<v-col cols="4">
-											<v-card-text>카테고리</v-card-text>
-										</v-col>
-										<v-col cols="8">
-											<v-card-text>{{ post.category }}</v-card-text>
-										</v-col>
+										<v-text-field
+											filled
+											rounded
+											dense
+											v-model="post.category"
+											readonly
+											label="카테고리"
+										></v-text-field>
 									</v-row>
+
 									<v-row>
-										<v-col cols="4">
-											<v-card-text>다운로드 수</v-card-text>
-										</v-col>
-										<v-col cols="8">
-											<v-card-text>{{ post.downloadCount }}</v-card-text>
-										</v-col>
-									</v-row>
-									<v-row>
-										<v-col cols="4">
-											<v-card-text>사용 수</v-card-text>
-										</v-col>
-										<v-col cols="8">
-											<v-card-text>{{ post.usedCount }}</v-card-text>
-										</v-col>
-									</v-row>
-									<v-row>
-										<v-col cols="4">
-											<v-card-text>평균점수</v-card-text>
-										</v-col>
-										<v-col cols="8">
-											<v-card-text>{{ post.averageScore }}</v-card-text>
-										</v-col>
+										<v-textarea
+											filled
+											rounded
+											dense
+											v-model="post.content"
+											readonly
+											label="내용"
+										></v-textarea>
 									</v-row>
 								</v-col>
 							</v-row>
-							<v-row class="ma-2">
-								<v-card-text>내용</v-card-text>
+							<v-row class="ma-3">
+								<v-text-field
+									filled
+									rounded
+									dense
+									v-model="post.key"
+									readonly
+									label="다운로드 링크"
+								>
+								</v-text-field>
+								<v-btn
+									v-if="post.key == ''"
+									rounded
+									color="#426dad"
+									class="subtitle-1 white--text "
+									@click.prevent="createShortUrl(post.objectId)"
+									><v-card-text>링크 발급하기</v-card-text></v-btn
+								>
 							</v-row>
-							<v-row class="ma-2">
-								<v-card-text>{{ post.content }}</v-card-text>
+							<v-row class="ma-3">
+								<v-text-field
+									filled
+									rounded
+									dense
+									v-model="post.api"
+									readonly
+									label="다운로드 API"
+								>
+								</v-text-field>
+								<v-btn
+									v-if="post.key == ''"
+									rounded
+									color="#426dad"
+									class="subtitle-1 white--text "
+									@click.prevent="createShortUrl(post.objectId)"
+									><v-card-text>API 발급하기</v-card-text></v-btn
+								>
 							</v-row>
-							<v-row class="ma-2">
+							<v-row class="ma-3">
 								<span class="display-5">첨부파일</span>
-								<v-btn @click.prevent="downloadItems(post.s3Info)"
-									>전체 다운로드</v-btn
+								<v-spacer></v-spacer>
+								<v-btn
+									rounded
+									color="#426dad"
+									class="subtitle-1 white--text"
+									@click.prevent="downloadItems(post.s3Info)"
+									><v-card-text>전체 다운로드</v-card-text></v-btn
 								>
 							</v-row>
 							<v-row>
@@ -320,19 +399,30 @@
 							</v-row>
 						</v-container>
 					</v-card-text>
-					<v-card-actions>
+					<v-card-actions class="pa-10">
 						<v-btn
-							color="error darken-1"
-							text
+							rounded
+							color="#C62828"
+							class="subtitle-1 white--text font-weight-bold"
 							@click="deletePost(post.objectId)"
 						>
 							삭제
 						</v-btn>
 						<v-spacer></v-spacer>
-						<v-btn color="blue darken-1" text @click="openDialog('update')">
+						<v-btn
+							rounded
+							color="#426dad"
+							class="subtitle-1 white--text font-weight-bold"
+							@click="openDialog('update')"
+						>
 							수정
 						</v-btn>
-						<v-btn color="blue darken-1" text @click="closeDialog()">
+						<v-btn
+							rounded
+							color="#426dad"
+							class="subtitle-1 white--text font-weight-bold"
+							@click="closeDialog()"
+						>
 							닫기
 						</v-btn>
 					</v-card-actions>
@@ -343,20 +433,18 @@
 			<v-dialog v-model="dialog.update" persistent max-width="60%">
 				<v-card>
 					<v-card-title>
-						<span class="display-1">AR Object 수정</span>
+						<span class="display-1 pa-7">AR Object 수정</span>
 					</v-card-title>
 					<v-divider></v-divider>
-					<v-card-text>
+					<v-card-text class="ma-3">
 						<v-container>
 							<v-row class="ma-1">
-								<v-col cols="4">
+								<v-col cols="5">
 									<v-img
 										v-if="getImgUrl(post) === ''"
 										justify="center"
 										align="center"
-										:src="
-											`https://user-images.githubusercontent.com/43382559/105813660-864fcb00-5ff3-11eb-8e3b-27291e8b3030.png`
-										"
+										src="@/assets/object.png"
 										aspect-ratio="1"
 										class="grey lighten-2"
 										max-height="100%"
@@ -397,21 +485,31 @@
 										</template>
 									</v-img>
 								</v-col>
-								<v-col cols="8">
+								<v-col cols="7" class="pa-10">
 									<v-row>
 										<v-text-field
+											filled
+											rounded
+											dense
 											v-model="post.name"
 											label="오브젝트명"
 										></v-text-field>
 									</v-row>
 									<v-row>
 										<v-combobox
+											filled
+											rounded
+											dense
 											v-model="post.category"
+											label="카테고리"
 											:items="categorys"
 										></v-combobox>
 									</v-row>
 									<v-row>
 										<v-textarea
+											filled
+											rounded
+											dense
 											v-model="post.content"
 											name="content"
 											label="내용"
@@ -419,28 +517,41 @@
 									</v-row>
 								</v-col>
 							</v-row>
-							<v-row class="ma-2">
+							<v-row class="ma-3">
 								<span class="display-5">첨부파일</span>
+								<v-spacer></v-spacer>
+								<span class="error-text">첨부파일은 수정이 불가능 합니다.</span>
 							</v-row>
 							<v-row>
 								<v-col cols="12" sm="12">
 									<v-chip
-										v-model="post.url"
+										v-for="file in post.s3Info"
+										:key="file.originalname"
 										class="ma-2"
-										filter
-										filter-icon="mdi-minus"
+										@click.prevent="downloadItems([...file])"
 									>
+										{{ file.originalname }}
 									</v-chip>
 								</v-col>
 							</v-row>
 						</v-container>
 					</v-card-text>
-					<v-card-actions>
+					<v-card-actions class="pa-10">
 						<v-spacer></v-spacer>
-						<v-btn color="blue darken-1" text @click="updatePost(post)">
+						<v-btn
+							rounded
+							color="#426dad"
+							class="subtitle-1 white--text font-weight-bold"
+							@click="updatePost(post)"
+						>
 							수정
 						</v-btn>
-						<v-btn color="blue darken-1" text @click="closeDialog()">
+						<v-btn
+							rounded
+							color="#426dad"
+							class="subtitle-1 white--text font-weight-bold"
+							@click="closeDialog()"
+						>
 							취소
 						</v-btn>
 					</v-card-actions>
@@ -452,76 +563,39 @@
 				<v-form>
 					<v-card>
 						<v-card-title>
-							<span class="display-1">AR Object 업로드</span>
+							<span class="display-1 pa-7">AR Object 업로드</span>
 						</v-card-title>
 						<v-divider></v-divider>
-						<v-card-text>
-							<v-container>
-								<v-row class="ma-1">
-									<v-col cols="4">
-										<v-img
-											v-if="getImgUrl(post) === ''"
-											justify="center"
-											align="center"
-											:src="
-												`https://user-images.githubusercontent.com/43382559/105813660-864fcb00-5ff3-11eb-8e3b-27291e8b3030.png`
-											"
-											aspect-ratio="1"
-											class="grey lighten-2"
-											max-height="100%"
-										>
-											<template v-slot:placeholder>
-												<v-row
-													class="fill-height ma-0"
-													align="center"
-													justify="center"
-												>
-													<v-progress-circular
-														indeterminate
-														color="grey lighten-5"
-													></v-progress-circular>
-												</v-row>
-											</template>
-										</v-img>
-										<v-img
-											v-if="getImgUrl(post) !== ''"
-											justify="center"
-											align="center"
-											:src="getImgUrl(post)"
-											aspect-ratio="1"
-											class="grey lighten-2"
-											max-height="100%"
-										>
-											<template v-slot:placeholder>
-												<v-row
-													class="fill-height ma-0"
-													align="center"
-													justify="center"
-												>
-													<v-progress-circular
-														indeterminate
-														color="grey lighten-5"
-													></v-progress-circular>
-												</v-row>
-											</template>
-										</v-img>
-									</v-col>
-									<v-col cols="8">
+						<v-card-text class="ma-3">
+							<v-container class="pa-10">
+								<v-row>
+									<v-col cols="12">
 										<v-row>
 											<v-text-field
+												filled
+												rounded
+												dense
 												v-model="post.name"
 												label="오브젝트명"
 											></v-text-field>
 										</v-row>
 										<v-row>
 											<v-combobox
+												filled
+												rounded
+												dense
 												v-model="post.category"
 												:items="categorys"
+												:hint="'새로운 카테고리는 타이핑 하세요'"
+												:persistent-hint="true"
 												label="카테고리"
 											></v-combobox>
 										</v-row>
 										<v-row>
 											<v-textarea
+												filled
+												rounded
+												dense
 												v-model="post.content"
 												name="content"
 												label="내용"
@@ -529,7 +603,7 @@
 										</v-row>
 									</v-col>
 								</v-row>
-								<v-row class="ma-2">
+								<v-row>
 									<span class="display-5">첨부파일</span>
 								</v-row>
 								<v-row>
@@ -560,6 +634,15 @@
 				</v-form>
 			</v-dialog>
 		</template>
+		<template>
+			<v-dialog v-model="dialog.upload" persistent max-width="50%">
+				<v-card>
+					<v-card-title>
+						업로드 중입니다 잠시만 기다려주세요
+					</v-card-title>
+				</v-card>
+			</v-dialog>
+		</template>
 	</v-container>
 </template>
 
@@ -567,6 +650,7 @@
 import moment from 'moment';
 
 import { ArObjectService } from './../../service/arObject.service';
+import { ShortUrlService } from './../../service/shortUrl.service';
 
 export default {
 	data() {
@@ -584,8 +668,14 @@ export default {
 				create: false,
 				read: false,
 				update: false,
+				upload: false,
 			},
 			post: [{ s3Info: '' }],
+			shortUrl: {
+				key: '',
+				link: '',
+				api: '',
+			},
 		};
 	},
 	async created() {
@@ -620,6 +710,7 @@ export default {
 			this.categorys.push('전체 카테고리');
 		},
 		async readPost(objectId) {
+			this.dialog.read = false;
 			this.post = await ArObjectService.readArObject(objectId);
 			this.post.created = moment(this.post.created).format(
 				'YY년 MM월 DD일 HH:MM:SS',
@@ -627,6 +718,22 @@ export default {
 			this.post.modified = moment(this.post.modified).format(
 				'YY년 MM월 DD일 HH:MM:SS',
 			);
+
+			const key = await ShortUrlService.getShortUrlKey(objectId);
+
+			if (process.env.NODE_ENV === 'development') {
+				if (key === 'false') this.post.key = '';
+				else {
+					this.post.key = 'http://localhost:8080/files/' + key;
+					this.post.api = 'http://localhost:3000/api/v1/' + key;
+				}
+			} else {
+				if (key === 'false') this.post.key = '';
+				else {
+					this.post.key = process.env.VUE_APP_DOWNLINK + key;
+					this.post.api = 'https://www.ccms.kr/api/v1/' + key;
+				}
+			}
 			this.dialog.read = true;
 		},
 		closeDialog() {
@@ -634,6 +741,9 @@ export default {
 			this.dialog.read = false;
 			this.dialog.create = false;
 			this.dialog.update = false;
+			this.dialog.upload = false;
+			this.shortUrl.key = '';
+			this.shortUrl.url = '';
 		},
 		async createPost() {
 			const formData = new FormData();
@@ -645,9 +755,12 @@ export default {
 			formData.append('content', this.post.content);
 			formData.append('category', this.post.category);
 			formData.append('modified', new Date());
+			this.dialog.upload = true;
+			await this.uploadFile(formData);
+		},
+		async uploadFile(formData) {
 			await ArObjectService.createArObject(formData);
-			this.closeDialog();
-			await this.fetch();
+			await this.fetch().then(this.closeDialog());
 		},
 		async deletePost(objectId) {
 			await ArObjectService.deleteArObject(objectId);
@@ -659,13 +772,16 @@ export default {
 			this.closeDialog();
 			await this.fetch();
 		},
-		openDialog(option) {
+		async openDialog(option) {
 			this.dialog.create = false;
 			this.dialog.read = false;
 			this.dialog.update = false;
 			if (option === 'create') this.dialog.create = true;
 			if (option === 'update') this.dialog.update = true;
-			if (option === 'read') this.dialog.read = true;
+			if (option === 'read') {
+				this.dialog.read = true;
+				await this.getShortUrl();
+			}
 		},
 		async downloadItems(files) {
 			files.forEach(file => {
@@ -675,6 +791,10 @@ export default {
 		getImgUrl(post) {
 			if (post.s3Info !== undefined) return post.s3Info[0].location;
 			else return '';
+		},
+		async createShortUrl(objectId) {
+			await ShortUrlService.createShortUrl(objectId);
+			await this.readPost(objectId);
 		},
 	},
 };

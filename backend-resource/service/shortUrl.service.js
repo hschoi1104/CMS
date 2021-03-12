@@ -34,6 +34,16 @@ export class ShortUrlService {
     return result;
   };
 
+  static getShortUrlKey = async (params) => {
+    let { objectId } = params;
+    const result = await ShortUrlDao.getShortUrlKey(objectId);
+
+    if (result == null) {
+      throw new handleError(404, 'ShortUrlKey not exsited');
+    }
+    return result;
+  };
+
   static getShortUrls = async () => {
     const result = await ShortUrlDao.getShortUrls();
 

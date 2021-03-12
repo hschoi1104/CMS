@@ -6,11 +6,11 @@ export class ShortUrlDao {
       objectId,
       key,
     });
-    return shortUrl.save();
+    return await shortUrl.save();
   };
 
   static getShortUrl = async (key) => {
-    return ShortUrl.find(
+    return await ShortUrl.find(
       { key },
       {
         __v: 0,
@@ -18,8 +18,17 @@ export class ShortUrlDao {
     );
   };
 
+  static getShortUrlKey = async (objectId) => {
+    return await ShortUrl.find(
+      { objectId },
+      {
+        __v: 0,
+      }
+    );
+  };
+
   static getShortUrls = async () => {
-    return ShortUrl.find(
+    return await ShortUrl.find(
       {},
       {
         __v: 0,
@@ -30,7 +39,7 @@ export class ShortUrlDao {
   };
 
   static deleteShortUrl = async (key) => {
-    return ShortUrl.deleteOne({
+    return await ShortUrl.deleteOne({
       key,
     });
   };
