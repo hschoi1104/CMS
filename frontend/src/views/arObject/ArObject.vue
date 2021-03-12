@@ -10,7 +10,7 @@
 								:items-per-page.sync="itemsPerPage"
 								:page.sync="page"
 								:search="search"
-								:sort-by="sortBy.toLowerCase()"
+								:sort-by="sortBy.toUpperCase()"
 								hide-default-footer
 							>
 								<template v-slot:header>
@@ -356,6 +356,25 @@
 								>
 							</v-row>
 							<v-row class="ma-3">
+								<v-text-field
+									filled
+									rounded
+									dense
+									v-model="post.api"
+									readonly
+									label="다운로드 API"
+								>
+								</v-text-field>
+								<v-btn
+									v-if="post.key == ''"
+									rounded
+									color="#426dad"
+									class="subtitle-1 white--text "
+									@click.prevent="createShortUrl(post.objectId)"
+									><v-card-text>API 발급하기</v-card-text></v-btn
+								>
+							</v-row>
+							<v-row class="ma-3">
 								<span class="display-5">첨부파일</span>
 								<v-spacer></v-spacer>
 								<v-btn
@@ -615,6 +634,15 @@
 				</v-form>
 			</v-dialog>
 		</template>
+		<template>
+			<v-dialog v-model="dialog.upload" persistent max-width="50%">
+				<v-card>
+					<v-card-title>
+						업로드 중입니다 잠시만 기다려주세요
+					</v-card-title>
+				</v-card>
+			</v-dialog>
+		</template>
 	</v-container>
 </template>
 
@@ -640,6 +668,7 @@ export default {
 				create: false,
 				read: false,
 				update: false,
+				upload: false,
 			},
 			post: [{ s3Info: '' }],
 			shortUrl: {
@@ -690,14 +719,20 @@ export default {
 				'YY년 MM월 DD일 HH:MM:SS',
 			);
 
-			this.post.key = await ShortUrlService.getShortUrlKey(objectId);
+			const key = await ShortUrlService.getShortUrlKey(objectId);
 
 			if (process.env.NODE_ENV === 'development') {
-				if (this.post.key === 'false') this.post.key = '';
-				else this.post.key = 'http://localhost:8080/files/' + this.post.key;
+				if (key === 'false') this.post.key = '';
+				else {
+					this.post.key = 'http://localhost:8080/files/' + key;
+					this.post.api = 'http://localhost:3000/api/v1/' + key;
+				}
 			} else {
-				if (this.post.key === 'false') this.post.key = '';
-				else this.post.key = process.env.VUE_APP_DOWNLINK + this.post.key;
+				if (key === 'false') this.post.key = '';
+				else {
+					this.post.key = process.env.VUE_APP_DOWNLINK + key;
+					this.post.api = 'https://www.ccms.kr/api/v1/' + key;
+				}
 			}
 			this.dialog.read = true;
 		},
@@ -706,6 +741,7 @@ export default {
 			this.dialog.read = false;
 			this.dialog.create = false;
 			this.dialog.update = false;
+			this.dialog.upload = false;
 			this.shortUrl.key = '';
 			this.shortUrl.url = '';
 		},
@@ -719,9 +755,12 @@ export default {
 			formData.append('content', this.post.content);
 			formData.append('category', this.post.category);
 			formData.append('modified', new Date());
+			this.dialog.upload = true;
+			await this.uploadFile(formData);
+		},
+		async uploadFile(formData) {
 			await ArObjectService.createArObject(formData);
-			this.closeDialog();
-			await this.fetch();
+			await this.fetch().then(this.closeDialog());
 		},
 		async deletePost(objectId) {
 			await ArObjectService.deleteArObject(objectId);
