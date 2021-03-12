@@ -301,7 +301,6 @@ export default {
 		async createLogValue() {
 			this.items.forEach(element => {
 				element.logs = [];
-				console.log(typeof element.logMap);
 				for (let ele of this.labels) {
 					if (element.logMap.size > 0 && element.logMap.has(ele)) {
 						element.logs.push(element.logMap.get(ele));
