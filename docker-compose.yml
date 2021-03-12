@@ -17,6 +17,10 @@ services:
       - frontend
 
   frontend:
+    environment: 
+      - VUE_APP_RESOURCE_URL = your_url
+      - VUE_APP_AUTH_URL = your_url
+      - VUE_APP_NODE_ENV = production
     build:
       dockerfile: Dockerfile
       context: ./frontend

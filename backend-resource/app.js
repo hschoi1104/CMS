@@ -31,6 +31,7 @@ global.logger = logger;
 // eslint-disable-next-line no-unused-vars
 app.use(function (err, req, res, next) {
   logger.error(err.message);
+  logger.error(err.stack);
   return res.status(err.statusCode || 500).json({
     statusCode: err.statusCode,
     status: 'Error',

@@ -1,8 +1,7 @@
 <template>
 	<v-app>
 		<Header />
-
-		<div class="ma-5 pa-5" style="height: 100%">
+		<div class="pt-11 mt-5" style="height: 100%">
 			<router-view />
 		</div>
 		<Footer />

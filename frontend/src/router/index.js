@@ -13,63 +13,37 @@ const routes = [
 		meta: { unauthorized: true },
 	},
 	{
-		path: '/object/manage',
-		name: 'objectManage',
-		component: () =>
-			import(
-				/* webpackChunkName: "objectManage" */ '../views/object/Manage.vue'
-			),
-	},
-	{
-		path: '/object/upload',
-		component: () =>
-			import(
-				/* webpackChunkName: "objectUpload" */ '../views/object/Upload.vue'
-			),
-	},
-	{
 		path: '/signup',
 		name: 'signup',
-		component: () =>
-			import(/* webpackChunkName: "signup" */ '../views/user/Signup.vue'),
+		component: () => import('../views/user/Signup.vue'),
 		meta: { unauthorized: true },
 	},
 	{
 		path: '/login',
 		name: 'login',
-		component: () =>
-			import(/* webpackChunkName: "login" */ '../views/user/Login.vue'),
+		component: () => import('../views/user/Login.vue'),
 		meta: { unauthorized: true },
 	},
 	{
 		path: '/user/manage/auth',
 		name: 'manageAuth',
-		component: () =>
-			import(
-				/* webpackChunkName: "manageAuth" */ '../views/user/AuthManage.vue'
-			),
-	},
-	{
-		path: '/guestbook',
-		name: 'guestbook',
-		component: () =>
-			import(
-				/* webpackChunkName: "guestbook" */ '../views/guestBook/GuestBook.vue'
-			),
-	},
-	{
-		path: '/board',
-		name: 'board',
-		component: () =>
-			import(/* webpackChunkName: "board" */ '../views/board/Board.vue'),
+		component: () => import('../views/user/AuthManage.vue'),
 	},
 	{
 		path: '/arobject',
 		name: 'arobject',
-		component: () =>
-			import(
-				/* webpackChunkName: "arobject" */ '../views/arObject/ArObject.vue'
-			),
+		component: () => import('../views/arObject/ArObject.vue'),
+	},
+	{
+		path: '/files/:key',
+		name: 'download',
+		component: () => import('../views/arObject/Download.vue'),
+		meta: { unauthorized: true },
+	},
+	{
+		path: '/dashboard',
+		name: 'dashboard',
+		component: () => import('../views/DashBoard.vue'),
 	},
 ];
 
