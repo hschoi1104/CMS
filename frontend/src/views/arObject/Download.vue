@@ -1,23 +1,10 @@
 <template>
-	<!-- <v-container class="fill-height" fluid>
-		<v-row
-			v-if="timerCount > 0"
-			class="display-1"
-			align="center"
-			justify="center"
-		>
-			{{ timerCount }}초 뒤 다운로드가 시작됩니다.
-		</v-row>
-		<v-row v-if="timerCount == 0" align="center" justify="center">
-			"done!"
-		</v-row>
-	</v-container> -->
 	<v-container class="fill-height" fluid>
 		<v-row class="fill-height">
 			<v-col cols="12" md="7" class="d-flex ma-0 pa-0 fill-screen">
 				<v-row align="center" justify="center">
 					<v-col cols="12" sm="6" md="7">
-						<v-card flat>
+						<v-card flat class="transparent" style="z-index:2;">
 							<v-row>
 								<v-col>
 									<v-img
@@ -35,7 +22,7 @@
 								</v-col>
 							</v-row>
 						</v-card>
-						<v-card flat>
+						<v-card flat class="transparent" style="z-index:2;">
 							<v-row
 								v-if="timerCount > 0"
 								class="display-1"
@@ -55,6 +42,7 @@
 						</v-card>
 					</v-col>
 				</v-row>
+				<div class="bg_bottomleft"></div>
 			</v-col>
 			<v-col cols="5" md="5" class="ma-0 pa-0 fill-height">
 				<v-card class="d-flex align-end" color="#426dad" tile minHeight="100%">
@@ -106,3 +94,15 @@ export default {
 	},
 };
 </script>
+<style>
+.bg_bottomleft {
+	background-image: url('../../assets/auth_background.png');
+	position: fixed;
+	bottom: 0px;
+	left: 0px;
+	width: 60%;
+	height: 60%;
+	background-size: contain;
+	z-index: 1;
+}
+</style>
